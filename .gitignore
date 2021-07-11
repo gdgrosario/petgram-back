@@ -1,0 +1,14 @@
+# ignore NPM modules
+node_modules
+
+# ignore transpiled files files
+dist
+
+# yarn ignores
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
