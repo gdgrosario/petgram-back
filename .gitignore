@@ -12,3 +12,6 @@ dist
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Development database data
+.data

@@ -21,8 +21,8 @@ Esta armada la estructura del proyecto con:
 ### Database
 
 Hay configurada una base de datos mongo con docker, se puede usar al principio hasta
-que tengamos una en atlas, los datos se guardan en el directorio .data y por ahora irían
-al repositorio, polemico.
+que tengamos una en atlas, los datos se guardan en el directorio .data, cada uno tendría 
+su propio set de datos de prueba.
 Se puede iniciar con el siguiente comando (requiere docker instalado)
 
 docker compose up -d
@@ -36,7 +36,6 @@ docker compose down
 npm run stop-db
 
 Si tienen mongo instalado tambien lo pueden usar, esto es para no instalar mongo localmente
-pero además tiene la ventaja que compartimos datos de prueba
 
 ### Environment
 
