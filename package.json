@@ -1,0 +1,38 @@
+{
+  "name": "petgram-back",
+  "version": "1.0.0",
+  "description": "Best pets social network",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "start-dev": "ts-node src/index.ts",
+    "dev": "nodemon",
+    "test": "jest ./test",
+    "db": "docker compose up -d",
+    "stop-db": "docker compose down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mnkeis/petgram-back.git"
+  },
+  "author": "GDGRosario",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mnkeis/petgram-back/issues"
+  },
+  "homepage": "https://github.com/mnkeis/petgram-back#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.6",
+    "mongodb-memory-server": "^7.2.0",
+    "nodemon": "^2.0.12",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
+}
