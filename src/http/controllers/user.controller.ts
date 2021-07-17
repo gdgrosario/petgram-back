@@ -1,10 +1,11 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { success } from '../../utils/response';
 
 // controller for user endpoint
 export const userController = () => {
   const router = Router();
-  router.get('', (req: Request, res: Response) => {
-    res.end('Get users');
+  router.get('', (req: TRequest, res: TResponse) => {
+    return success(res, 'Get users', 200);
   });
   return router;
 }
