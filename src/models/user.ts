@@ -1,12 +1,4 @@
-import { Schema, model, Document } from "mongoose";
-
-/* User interface */
-export interface IUser extends Document {
-  email: string,
-  password: string,
-  name: string,
-  phone: string,
-}
+import { Schema, model } from "mongoose";
 
 /* User schema */
 export const UserSchema = new Schema({

@@ -1,4 +1,6 @@
-import { IUser, User } from '../../src/models/user';
+
+import '../../src/@types/index.d';
+import { User } from '../../src/models/user';
 import * as dbHandler from '../mock.db';
 
 beforeAll(async () => {

@@ -31,4 +31,3 @@ export const error = (
   statusCode: ErrorCodes,
 ) => res.status(statusCode).json({ messageStatus: statusResponses[statusCode], data, status: statusCode });
 
-
