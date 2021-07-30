@@ -1,9 +1,9 @@
-import { createServer } from 'http';
+import { createServer } from "http";
 
-import { connectDb } from './db';
-import { setupExpressApp } from './http/app';
+import { connectDb } from "./db";
+import { setupExpressApp } from "./http/app";
 
-const dbUrl = process.env.DB_URL || 'localhost';
+const dbUrl = process.env.DB_URL || "localhost";
 const dbPort = process.env.DB_PORT || 27017;
 const serverPort = process.env.PORT || 3000;
 
