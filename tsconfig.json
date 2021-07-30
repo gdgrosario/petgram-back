@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "types": ["node", "./src/@types"]
+    "types": ["node", "jest","./src/@types"]
   },
   "lib": [
     "es2015"
