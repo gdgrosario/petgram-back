@@ -1,10 +1,9 @@
-type TMongoId = import('mongoose').Schema.Types.ObjectId;
+type TMongoId = import("mongoose").Schema.Types.ObjectId;
 
-type TMongoDocument = import('mongoose').Document;
+type TMongoDocument = import("mongoose").Document;
 
-type TResponse = import('express').Response;
+type TResponse = import("express").Response;
 
-type TRequest = import('express').Request;
+type TRequest = import("express").Request;
 
-type TNext = import('express').NextFunction;
-
+type TNext = import("express").NextFunction;

@@ -1,2 +1,2 @@
-import './types';
-import './interface';
+import "./types";
+import "./interface";

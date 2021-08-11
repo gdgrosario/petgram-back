@@ -11,23 +11,28 @@ interface IResponse<T> {
 }
 
 const statusResponses: IResponse<string> = {
-  200: 'OK!',
-  201: 'CREATED!',
-  400: 'CLIENT ERROR!',
-  401: 'UNAUTHORIZED',
-  404: 'NOT FOUND!',
-  500: 'INTERNAL SERVER ERROR'
+  200: "OK!",
+  201: "CREATED!",
+  400: "CLIENT ERROR!",
+  401: "UNAUTHORIZED",
+  404: "NOT FOUND!",
+  500: "INTERNAL SERVER ERROR",
 };
 
 export const success = (
   res: TResponse,
   data: Object | string,
-  statusCode: SuccessCodes,
-) => res.status(statusCode).json({ messageStatus: statusResponses[statusCode], data, status: statusCode });
+  statusCode: SuccessCodes
+) =>
+  res.status(statusCode).json({
+    messageStatus: statusResponses[statusCode],
+    data,
+    status: statusCode,
+  });
 
-export const error = (
-  res: TResponse,
-  data: string,
-  statusCode: ErrorCodes,
-) => res.status(statusCode).json({ messageStatus: statusResponses[statusCode], data, status: statusCode });
-
+export const error = (res: TResponse, data: string, statusCode: ErrorCodes) =>
+  res.status(statusCode).json({
+    messageStatus: statusResponses[statusCode],
+    data,
+    status: statusCode,
+  });
