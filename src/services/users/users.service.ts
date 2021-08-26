@@ -1,7 +1,7 @@
-import { UpdateUserDto } from './../../dtos/user.dtos';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from 'src/dtos/user.dtos';
-import { User } from 'src/entities/user.entity';
+import { UpdateUserDto } from "./../../dtos/user.dtos";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CreateUserDto } from "src/dtos/user.dtos";
+import { User } from "src/entities/user.entity";
 
 @Injectable()
 export class UsersService {
@@ -9,20 +9,20 @@ export class UsersService {
   private users: Array<User> = [
     {
       id: 1,
-      nickname: 'garfield_007',
-      name: 'Garfield',
-      birthday: '2020-08-25',
-      pictureProfile: '',
-      bannerProfile: '',
-      biography: '',
+      nickname: "garfield_007",
+      name: "Garfield",
+      birthday: "2020-08-25",
+      pictureProfile: "",
+      bannerProfile: "",
+      biography: "",
       numberOfPosts: 0,
       numberOfFollowers: 0,
       numberOfFollowed: 0,
-      email: 'garfield007@gdgrosario.com',
-      password: 'Abcd1234',
-      raza: 'Dalmata',
-      sexo: 'Masculino',
-      phoneNumber: '+5493413944318'
+      email: "garfield007@gdgrosario.com",
+      password: "Abcd1234",
+      raza: "Dalmata",
+      sexo: "Masculino",
+      phoneNumber: "+5493413944318"
     }
   ];
 
