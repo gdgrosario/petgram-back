@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query,
+  Query
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from 'src/dtos/user.dtos';
 
@@ -38,10 +38,7 @@ export class UsersController {
 
   @Put(':userId')
   @HttpCode(HttpStatus.OK)
-  update(
-    @Body() payload: UpdateUserDto,
-    @Param('userId', ParseIntPipe) userId: number,
-  ) {
+  update(@Body() payload: UpdateUserDto, @Param('userId', ParseIntPipe) userId: number) {
     return this.usersService.update(userId, payload);
   }
 

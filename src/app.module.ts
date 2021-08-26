@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersController } from './controllers/users/users.controller';
@@ -11,8 +13,16 @@ import { HistoriesController } from './controllers/histories/histories.controlle
 import { HistoriesService } from './services/histories/histories.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController, UsersController, PostsController, CommentsController, HistoriesController],
-  providers: [AppService, UsersService, PostsService, CommentsService, HistoriesService],
+  imports: [
+    MongooseModule.forRoot(process.env.MONGO_URL || 'mongodb://localhost/petgram')
+  ],
+  controllers: [
+    AppController,
+    UsersController,
+    PostsController,
+    CommentsController,
+    HistoriesController
+  ],
+  providers: [AppService, UsersService, PostsService, CommentsService, HistoriesService]
 })
 export class AppModule {}
