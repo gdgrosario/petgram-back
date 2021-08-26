@@ -1,58 +1,73 @@
-# Petgram Backend
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
 
-## THE pets social network
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-### (Spanish) Instructions so far
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-Esta armada la estructura del proyecto con:
+## Description
 
-- NodeJS
-- Mongoose
-- Express
-- Typescript
-- Jest
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-### Directory structure
+## Installation
 
-/src
-/http - Express y endpoints
-/models - Database models
-/test
+```bash
+$ npm install
+```
 
-### Database
+## Running the app
 
-Hay configurada una base de datos mongo con docker, se puede usar al principio hasta
-que tengamos una en atlas, los datos se guardan en el directorio .data, cada uno tendría
-su propio set de datos de prueba.
-Se puede iniciar con el siguiente comando (requiere docker instalado)
+```bash
+# development
+$ npm run start
 
-docker compose up -d
-ò
-npm run db
+# watch mode
+$ npm run start:dev
 
-Y se detiene con
+# production mode
+$ npm run start:prod
+```
 
-docker compose down
-ò
-npm run stop-db
+## Test
 
-Si tienen mongo instalado tambien lo pueden usar, esto es para no instalar mongo localmente
+```bash
+# unit tests
+$ npm run test
 
-### Environment
+# e2e tests
+$ npm run test:e2e
 
-Las variables de entorno utilizadas hasta el momento son:
+# test coverage
+$ npm run test:cov
+```
 
-- DB_URL - URL de la base de datos (default: localhost)
-- DB_PORT - Puerto de la base de datos (default: 27017)
-- PORT - Puerto de la aplicación (default: 3000)
+## Support
 
-### VSCode
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-Yo uso dos espacios de indent, queda guardada esa personalización en la carpeta .vscode
-Si alguien prefiere usar 4 o más :( lo charlamos
+## Stay in touch
 
-### TODO
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-- Agregar los modelos de datos necesarios y empezar a crear los endpoints
-- Ver tema test
-- Documentar la API (OpenAPI / Swagger)
+## License
+
+Nest is [MIT licensed](LICENSE).
