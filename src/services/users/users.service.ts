@@ -1,10 +1,13 @@
-import { UpdateUserDto } from "./../../dtos/user.dtos";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { CreateUserDto } from "src/dtos/user.dtos";
-import { User } from "src/entities/user.entity";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { CreateUserDto, UpdateUserDto } from "../../dtos/user.dtos";
+import { User } from "../../entities/user.entity";
 
 @Injectable()
 export class UsersService {
+  constructor(@InjectModel("User") private readonly userModel: Model<User>) {}
+
   private counterId = 1;
   private users: Array<User> = [
     {
@@ -26,8 +29,9 @@ export class UsersService {
     }
   ];
 
-  findAll() {
-    return this.users;
+  async findAll(): Promise<User[]> {
+    const users = await this.userModel.find();
+    return users;
   }
 
   findOne(id: number) {

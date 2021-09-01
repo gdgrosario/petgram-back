@@ -11,10 +11,12 @@ import { CommentsController } from "./controllers/comments/comments.controller";
 import { CommentsService } from "./services/comments/comments.service";
 import { HistoriesController } from "./controllers/histories/histories.controller";
 import { HistoriesService } from "./services/histories/histories.service";
+import { UserSchema } from "./schemas/users/user.schema";
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URL || "mongodb://localhost/petgram")
+    MongooseModule.forRoot(process.env.MONGO_URL || "mongodb://localhost/petgram"),
+    MongooseModule.forFeature([{ name: "User", schema: UserSchema }])
   ],
   controllers: [
     AppController,

@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+
 export class User {
   id: number;
   nickname: string;
