@@ -4,8 +4,8 @@
   "proseWrap": "always",
   "tabWidth": 2,
   "semi": true,
-  "singleQuote": true,
+  "singleQuote": false,
   "useTabs": false,
   "trailingComma": "none",
-  "printWidth": 90
+  "printWidth": 90,
 }
