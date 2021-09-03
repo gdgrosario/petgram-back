@@ -5,7 +5,7 @@ node_modules
 dist
 
 # yarn ignores
-.yarn/*
+.yarn
 !.yarn/patches
 !.yarn/releases
 !.yarn/plugins
