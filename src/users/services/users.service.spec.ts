@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { UsersService } from "./users.service";
-import { User } from "../../entities/user.entity";
+import { User } from "../entities/user.entity";
 import { MongooseModule } from "@nestjs/mongoose";
-import { UserSchema } from "../../schemas/users/user.schema";
+import { UserSchema } from "../schemas/user.schema";
 
 describe("UsersService", () => {
   let service: UsersService;
@@ -25,7 +25,6 @@ describe("UsersService", () => {
 
   it("should return array users", async () => {
     const users = await service.findAll();
-    console.log(users);
     expect(Array.isArray(users)).toBeTruthy();
   });
 
