@@ -6,7 +6,7 @@ import { User } from "../entities/user.entity";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel("User") private readonly userModel: Model<User>) {}
+  constructor(@InjectModel("Users") private readonly userModel: Model<User>) {}
 
   private counterId = 1;
   private users: Array<User> = [
