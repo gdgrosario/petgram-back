@@ -1,7 +1,8 @@
+import { genSalt, hash, compare } from "bcrypt";
 import { Document } from "mongoose";
 
-export class User {
-  id: number;
+export class User extends Document {
+  _id: string;
   nickname: string;
   name: string;
   birthday: string;
@@ -16,4 +17,13 @@ export class User {
   raza: string;
   sexo: string;
   phoneNumber: string;
+
+  async hashPassword() {
+    const salt = await genSalt();
+    this.password = await hash(this.password, salt);
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    return await compare(password, this.password);
+  }
 }
