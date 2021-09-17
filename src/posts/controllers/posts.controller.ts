@@ -1,7 +1,6 @@
-import { Body, Controller, Get, HttpStatus, Res , Post, HttpCode, BadRequestException, NotFoundException, Param, Delete, Put, InternalServerErrorException} from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, Res , Post, HttpCode, BadRequestException, NotFoundException, Param, Delete, Put} from "@nestjs/common";
 import { PostDto } from "../dtos/post.dtos";
 import { PostsService } from '../services/posts.service';
-
 
 @Controller("posts")
 export class PostsController {
@@ -42,10 +41,9 @@ export class PostsController {
         
         if(!checkId) throw new NotFoundException(`El id ${idPost} no es valido`);
         
-        const findPost = await this.postsService.getById(idPost)
-        if(!findPost) throw new NotFoundException('No se encontro la publicación');
-
         const post = await this.postsService.getById(idPost)
+
+        if(!post) throw new NotFoundException('No se encontro la publicación');
        
         return res.json({
             post
@@ -65,7 +63,6 @@ export class PostsController {
         const post = await this.postsService.delete(idPost)
        
         return res.json({
-
             post
         })
     }
