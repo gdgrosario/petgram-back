@@ -1,4 +1,3 @@
-import { UsersService } from "./../../services/users/users.service";
 import {
   Body,
   Controller,
@@ -12,7 +11,9 @@ import {
   Put,
   Query
 } from "@nestjs/common";
-import { CreateUserDto, UpdateUserDto } from "src/dtos/user.dtos";
+
+import { UsersService } from "../services/users.service";
+import { CreateUserDto, UpdateUserDto } from "../dtos/user.dtos";
 
 @Controller("users")
 export class UsersController {
