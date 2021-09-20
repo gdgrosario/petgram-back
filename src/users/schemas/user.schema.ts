@@ -1,24 +1,35 @@
-import { Schema } from "mongoose";
+import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 
-export const UserSchema = new Schema({
-  nickname: {
-    type: String,
-    unique: true
-  },
-  name: String,
-  birthday: String,
-  pictureProfile: String,
-  bannerProfile: String,
-  biography: String,
-  numberOfPoStS: Number,
-  numberOfFollowerS: Number,
-  numberOfFollowed: Number,
-  email: {
-    type: String,
-    unique: true
-  },
-  password: String,
-  raza: String,
-  Sexo: String,
-  phoneNumber: String
-});
+@Schema()
+export class User {
+  @Prop({ unique: true })
+  nickname: String;
+  @Prop()
+  name: String;
+  @Prop()
+  birthday: Date;
+  @Prop()
+  pictureProfile: String;
+  @Prop()
+  bannerProfile: String;
+  @Prop()
+  biography: String;
+  @Prop()
+  numberOfPoStS: Number;
+  @Prop()
+  numberOfFollowerS: Number;
+  @Prop()
+  numberOfFollowed: Number;
+  @Prop({ unique: true })
+  email: String;
+  @Prop()
+  password: String;
+  @Prop()
+  raza: String;
+  @Prop()
+  sexo: String;
+  @Prop()
+  phoneNumber: String;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);

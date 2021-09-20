@@ -1,12 +1,18 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { hash, genSalt } from "bcrypt";
+
 import { CreateUserDto } from "../dtos/user.dtos";
 import { User } from "../entities/user.entity";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel("Users") private readonly userModel: Model<User>) {}
+
+  private hashPassword(password: string, salt: string): Promise<string> {
+    return hash(password, salt);
+  }
 
   async findAll(): Promise<User[]> {
     const users = await this.userModel.find();
@@ -22,7 +28,8 @@ export class UsersService {
   }
 
   async create(payload: CreateUserDto): Promise<User> {
-    const { email, nickname } = payload;
+    const { email, nickname, password } = payload;
+    const salt = await genSalt();
 
     const userFindWithEmail = await this.userModel.findOne({ email });
     const userFindWithNickname = await this.userModel.findOne({ nickname });
@@ -40,6 +47,7 @@ export class UsersService {
     }
 
     const user = new this.userModel(payload);
+    user.password = await this.hashPassword(password, salt);
     return await user.save();
   }
 
