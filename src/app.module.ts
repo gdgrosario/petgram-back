@@ -8,14 +8,18 @@ import { CommentsModule } from "./comments/comments.module";
 import { UsersModule } from "./users/users.module";
 import { HistoriesModule } from "./histories/histories.module";
 import { PostsModule } from "./posts/posts.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URL || "mongodb://localhost/petgram"),
+    MongooseModule.forRoot(process.env.MONGO_URL || "mongodb://localhost/petgram", {
+      useCreateIndex: true
+    }),
     UsersModule,
     CommentsModule,
     HistoriesModule,
-    PostsModule
+    PostsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]
