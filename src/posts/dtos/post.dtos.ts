@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsInt, IsEmail, IsArray } from "class-validator";
+import { IsString, IsNotEmpty, IsInt, IsArray } from "class-validator";
 import { PartialType } from "@nestjs/mapped-types";
 export class PostDto {
     @IsString()

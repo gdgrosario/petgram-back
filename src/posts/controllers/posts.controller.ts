@@ -1,5 +1,6 @@
-import { Body, Controller, Get, HttpStatus, Res , Post, HttpCode, BadRequestException, NotFoundException, Param, Delete, Put, InternalServerErrorException} from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, Post, HttpCode, Param, Delete, Put} from "@nestjs/common";
 import { PostDto } from "../dtos/post.dtos";
+import { Post as PostEntity } from "../entities/post.entity";
 import { PostsService } from '../services/posts.service';
 
 
@@ -9,84 +10,31 @@ export class PostsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async createPost(@Res() res, @Body() payload: PostDto):Promise<Response>{
-        const { author, pathPhoto, title, numberOfLikes } = payload
-            
-        if(!author || !pathPhoto || !title || !numberOfLikes) throw new BadRequestException('Verifique los campos, algunos son necesarios');
-
-        const post = await this.postsService.post(payload)
-        if(!post) throw new BadRequestException('Error al crear el usuario');
-
-        return res.json({
-            post
-        })
-    
+    createPost(@Body() payload: PostDto):Promise<PostEntity>{
+        return this.postsService.createpost(payload)
     }
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    async getAllPost(@Res() res):Promise<Response>{
-        const post = await this.postsService.getAll()
-       
-        if(!post) throw new NotFoundException('No se encontro ningun publicación');
-
-        return res.json({
-            post
-        })
+    getAllPost():Promise<PostEntity[]>{
+        return this.postsService.getAll() 
     }
 
     @Get(':idPost')
     @HttpCode(HttpStatus.OK)
-    async getPostById(@Res() res, @Param('idPost') idPost:string):Promise<Response>{
-        const checkId: RegExpMatchArray | null = idPost.match(/^[0-9a-fA-F]{24}$/)
-        
-        if(!checkId) throw new NotFoundException(`El id ${idPost} no es valido`);
-        
-        const findPost = await this.postsService.getById(idPost)
-        if(!findPost) throw new NotFoundException('No se encontro la publicación');
-
-        const post = await this.postsService.getById(idPost)
-       
-        return res.json({
-            post
-        })
+    getPostById(@Param('idPost') idPost:string):Promise<PostEntity>{
+        return this.postsService.getById(idPost)
     }
 
     @Delete(':idPost')
     @HttpCode(HttpStatus.OK)
-    async delePost(@Res() res, @Param('idPost') idPost:string):Promise<Response>{
-        const checkId: RegExpMatchArray | null = idPost.match(/^[0-9a-fA-F]{24}$/)
-
-        if(!checkId) throw new NotFoundException(`El id ${idPost} no es valido`);
-
-        const findPost = await this.postsService.getById(idPost)
-        if(!findPost) throw new NotFoundException('No se encontro la publicación');
-        
-        const post = await this.postsService.delete(idPost)
-       
-        return res.json({
-
-            post
-        })
+    delePost(@Param('idPost') idPost:string):Promise<PostEntity>{
+        return this.postsService.delete(idPost)
     }
 
     @Put(':idPost')
     @HttpCode(HttpStatus.OK)
-    async updatePost(@Res() res, @Param('idPost') idPost:string, @Body() payload:PostDto):Promise<Response>{
-        const checkId: RegExpMatchArray | null = idPost.match(/^[0-9a-fA-F]{24}$/)
-        const { author, pathPhoto, title, numberOfLikes } = payload
-
-        if(!checkId) throw new NotFoundException(`El id ${idPost} no es valido`);
-
-        const findPost = await this.postsService.getById(idPost)
-        if(!findPost) throw new NotFoundException('No se encontro la publicación');
-
-        if(!author || !pathPhoto || !title || !numberOfLikes) throw new BadRequestException('Verifique los campos, algunos son necesarios');
-        
-        const post = await this.postsService.update(idPost, payload)
-       
-        return res.json({
-            post
-        })
+    updatePost(@Param('idPost') idPost:string, @Body() payload:PostDto):Promise<PostEntity>{
+        return this.postsService.update(idPost, payload)
     }
 }

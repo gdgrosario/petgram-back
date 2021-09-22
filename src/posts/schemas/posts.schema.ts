@@ -7,15 +7,15 @@ export type PostShemaDocument = PostS & Document;
 @Schema()
 export class PostS {
   @Prop({ required: true })
-  pathPhoto: String;
+  pathPhoto: string;
   @Prop({ required: true })
-  author: String;
+  author: string;
   @Prop({ required: false })
-  description: String;
+  description: string;
   @Prop({ required: true })
-  title: String;
+  title: string;
   @Prop({ required: true })
-  numberOfLikes: Number;
+  numberOfLikes: number;
   @Prop({ required: false })
   coments: [];
   
