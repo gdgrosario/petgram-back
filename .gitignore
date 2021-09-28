@@ -15,3 +15,6 @@ dist
 
 # Development database data
 .data
+
+*.env
+/mongo_data
