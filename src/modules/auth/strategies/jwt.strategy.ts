@@ -3,7 +3,7 @@ import { ConfigType } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 
 import { Strategy, ExtractJwt } from "passport-jwt";
-import config from "../../config/config";
+import config from "../../../config/config";
 
 //TODO: mover al package model
 interface IPayloadToken {
