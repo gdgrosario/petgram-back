@@ -10,6 +10,7 @@ import { User } from "../entities/user.entity";
 export class UsersService {
   constructor(@InjectModel("Users") private readonly userModel: Model<User>) {}
 
+  //TODO: ponerlo en el package utils
   private hashPassword(password: string, salt: string): Promise<string> {
     return hash(password, salt);
   }

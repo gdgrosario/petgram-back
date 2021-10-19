@@ -4,11 +4,11 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
-import { CommentsModule } from "./comments/comments.module";
-import { UsersModule } from "./users/users.module";
-import { HistoriesModule } from "./histories/histories.module";
-import { PostsModule } from "./posts/posts.module";
-import { AuthModule } from "./auth/auth.module";
+import { CommentsModule } from "./modules/comments/comments.module";
+import { UsersModule } from "./modules/users/users.module";
+import { HistoriesModule } from "./modules/histories/histories.module";
+import { PostsModule } from "./modules/posts/posts.module";
+import { AuthModule } from "./modules/auth/auth.module";
 
 @Module({
   imports: [
