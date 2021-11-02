@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule } from "@nestjs/config";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
+import { DatabaseModule } from "../../database/database.module";
 import { CommentsModule } from "../comments/comments.module";
 import { UsersModule } from "../users/users.module";
 import { HistoriesModule } from "../histories/histories.module";
@@ -20,10 +20,7 @@ import config from "../../config/config";
       isGlobal: true,
       load: [config]
     }),
-    //TODO: poner este MongooseModule en un modulo para la db
-    MongooseModule.forRoot(process.env.MONGO_URL || "mongodb://localhost/petgram", {
-      useCreateIndex: true
-    }),
+    DatabaseModule,
     UsersModule,
     CommentsModule,
     HistoriesModule,

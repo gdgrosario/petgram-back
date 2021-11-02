@@ -1,4 +1,4 @@
 export interface IPayloadToken {
-  role: string;
+  nickname: string;
   sub: string;
 }

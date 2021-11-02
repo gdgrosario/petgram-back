@@ -7,6 +7,8 @@ import config from "../../config/config";
 import { UsersModule } from "../users/users.module";
 import { AuthService } from "./services/auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
+import { AuthController } from "./controllers/auth.controller";
+import { LocalStrategy } from "./strategies/local.strategy";
 
 @Module({
   imports: [
@@ -18,14 +20,14 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
         return {
           secret: configService.jwtSecret,
           signOptions: {
-            expiresIn: "1d"
+            expiresIn: "10d"
           }
         };
       }
     })
   ],
 
-  controllers: [],
-  providers: [AuthService, JwtStrategy]
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, LocalStrategy]
 })
 export class AuthModule {}
