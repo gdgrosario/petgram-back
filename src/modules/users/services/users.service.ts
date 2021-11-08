@@ -28,6 +28,11 @@ export class UsersService {
     return user;
   }
 
+  async findByEmail(email: string) {
+    //TODO: validacion correspondiente
+    return this.userModel.findOne({ email }).exec();
+  }
+
   async create(payload: CreateUserDto): Promise<User> {
     const { email, nickname, password } = payload;
     const salt = await genSalt();

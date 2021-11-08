@@ -1,5 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
+import { Strategy } from "passport-local";
 
-//TODO: implementar local strategy con el ejemplo de <@iBelando>
+import { AuthService } from "../services/auth.service";
+
 @Injectable()
-export class LocalStrategy {}
+export class LocalStrategy extends PassportStrategy(Strategy, "local") {
+  constructor(private authService: AuthService) {
+    super({
+      usernameField: "email",
+      passwordField: "password"
+    });
+  }
+
+  async validate(email: string, password: string) {
+    const user = await this.authService.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException("Not allowed.");
+    }
+    return user;
+  }
+}
