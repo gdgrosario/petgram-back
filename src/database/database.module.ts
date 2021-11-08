@@ -10,12 +10,12 @@ import config from "../config/config";
     MongooseModule.forRootAsync({
       useFactory: (configService: ConfigType<typeof config>) => {
         const { connection, user, password, host, port, dbName } = configService.mongo;
-
         return {
           uri: `${connection}://${host}:${port}`,
           user,
           pass: password,
-          dbName
+          dbName,
+          useCreateIndex: true,
         };
       },
       inject: [config.KEY]
