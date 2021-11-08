@@ -52,6 +52,9 @@ export class CreateUserDto {
 
   @IsString()
   readonly phoneNumber: string;
+
+  @IsString()
+  readonly role: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}

@@ -3,8 +3,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { hash, genSalt } from "bcrypt";
 
-import { CreateUserDto } from "../dtos/user.dtos";
-import { User } from "../entities/user.entity";
+import { CreateUserDto } from "./dtos/user.dtos";
+import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {
