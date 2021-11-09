@@ -18,18 +18,17 @@ export class AuthService {
     if(user) {
       const isMatch = Hash.compare(password, user.password);
       if(isMatch) {
-        this.generateJWT(user);
+        return this.generateJWT(user);
       }
+    } else {
+      throw new NotFoundException(`User not found. Verify your credentials.`);
     }
-    throw new NotFoundException(`User not found. Verify your credentials.`);
   }
 
   generateJWT(user: User) {
     const payload: IPayloadToken = { role: user.role, sub: user.id };
-    const objUserToReturn = plainToClass(User, user);
     return {
       access_token: this.jwtService.sign(payload),
-      objUserToReturn
     }
   }
 
