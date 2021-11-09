@@ -33,12 +33,7 @@ export class AuthService {
     }
   }
 
-  register(data: CreateUserDto) {
-    const user = this.userService.findByEmail(data.email);
-    if(!user) {
-      this.userService.create(data);
-    } else {
-      throw new BadRequestException(`The email ${data.email} is already used.`);
-    }
+  async register(data: CreateUserDto) {
+    await this.userService.create(data);
   }
 }

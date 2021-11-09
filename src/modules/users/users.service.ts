@@ -5,16 +5,12 @@ import { hash, genSalt } from "bcrypt";
 
 import { CreateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
+import { Hash } from "../../utils/Hash";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel("Users") private readonly userModel: Model<User>) {}
-
-  //TODO: ponerlo en el package utils
-  private hashPassword(password: string, salt: string): Promise<string> {
-    return hash(password, salt);
-  }
-
+ 
   async findAll(): Promise<User[]> {
     const users = await this.userModel.find();
     return users;
@@ -29,16 +25,13 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    //TODO: validacion correspondiente
-    return this.userModel.findOne({ email }).exec();
+    return await this.userModel.findOne({ email }); 
   }
 
-  async create(payload: CreateUserDto): Promise<User> {
-    const { email, nickname, password } = payload;
-    const salt = await genSalt();
+  async create(data: CreateUserDto) {
+    const { email, nickname, password } = data;
 
-    const userFindWithEmail = await this.userModel.findOne({ email });
-    const userFindWithNickname = await this.userModel.findOne({ nickname });
+   const userFindWithEmail = await this.userModel.findOne({ email });
 
     if (userFindWithEmail) {
       throw new BadRequestException(
@@ -46,37 +39,16 @@ export class UsersService {
       );
     }
 
+    const userFindWithNickname = await this.userModel.findOne({ nickname }); 
+
     if (userFindWithNickname) {
       throw new BadRequestException(
         `The user with the nickname: '${nickname}' already exists.`
       );
     }
 
-    const user = new this.userModel(payload);
-    user.password = await this.hashPassword(password, salt);
+    const user = new this.userModel(data);
+    user.password = Hash.make(password);
     return await user.save();
   }
-
-  /*update(id: number, payload: UpdateUserDto) {
-    const user = this.findOne(id);
-    if (user) {
-      const index = this.users.findIndex(element => element.id === id);
-      this.users[index] = {
-        ...user,
-        ...payload
-      };
-      return this.users;
-    }
-    return null;
-  }
-
-  delete(id: number) {
-    const user = this.findOne(id);
-    if (user) {
-      const index = this.users.findIndex(element => element.id === id);
-      this.users.splice(index);
-      return this.users;
-    }
-    return null;
-  }*/
 }
