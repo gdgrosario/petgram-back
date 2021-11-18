@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsNotEmpty, IsPhoneNumber, IsDate, IsNumber } from "class-validator";
-import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Schema, Prop } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 @Schema()
 export class User extends Document {

@@ -18,27 +18,21 @@ export class AuthService {
     if(user) {
       const isMatch = Hash.compare(password, user.password);
       if(isMatch) {
-        this.generateJWT(user);
+        return this.generateJWT(user);
       }
+    } else {
+      throw new NotFoundException(`User not found. Verify your credentials.`);
     }
-    throw new NotFoundException(`User not found. Verify your credentials.`);
   }
 
   generateJWT(user: User) {
     const payload: IPayloadToken = { role: user.role, sub: user.id };
-    const objUserToReturn = plainToClass(User, user);
     return {
       access_token: this.jwtService.sign(payload),
-      objUserToReturn
     }
   }
 
-  register(data: CreateUserDto) {
-    const user = this.userService.findByEmail(data.email);
-    if(!user) {
-      this.userService.create(data);
-    } else {
-      throw new BadRequestException(`The email ${data.email} is already used.`);
-    }
+  async register(data: CreateUserDto) {
+    await this.userService.create(data);
   }
 }

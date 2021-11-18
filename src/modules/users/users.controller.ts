@@ -31,22 +31,4 @@ export class UsersController {
   getOne(@Param("userId", ParseIntPipe) userId: string) {
     return this.usersService.findOne(userId);
   }
-
-  @Post()
-  @HttpCode(HttpStatus.OK)
-  async create(@Body() payload: CreateUserDto): Promise<User> {
-    return this.usersService.create(payload);
-  }
-
-  /*@Put(":userId")
-  @HttpCode(HttpStatus.OK)
-  update(@Body() payload: UpdateUserDto, @Param("userId", ParseIntPipe) userId: number) {
-    return this.usersService.update(userId, payload);
-  }
-
-  @Delete(":userId")
-  @HttpCode(HttpStatus.OK)
-  delete(@Param("userId", ParseIntPipe) userId: number) {
-    return this.usersService.delete(userId);
-  }*/
 }
