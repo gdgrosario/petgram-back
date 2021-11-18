@@ -30,6 +30,8 @@ export class User {
   sexo: String;
   @Prop()
   phoneNumber: String;
+  @Prop({ default: "USER" })
+  role: String;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
