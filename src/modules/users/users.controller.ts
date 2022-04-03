@@ -1,20 +1,14 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
-  Post,
-  Put,
-  Query
+  Query,
 } from "@nestjs/common";
 
 import { UsersService } from "./users.service";
-import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
-import { User } from "./entities/user.entity";
 
 @Controller("users")
 export class UsersController {
