@@ -35,6 +35,7 @@ export class AuthService {
   }
 
   async register(data: CreateUserDto) {
-    await this.userService.create(data);
+    const user = await this.userService.create(data);
+    return await this.generateJWT(user);
   }
 }
