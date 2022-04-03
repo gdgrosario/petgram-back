@@ -1,17 +1,21 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Comment } from "../entities/comment.entity";
 import { CommentsService } from "../services/comments.service";
 
 @Controller("comments")
 export class CommentsController {
 	constructor(private readonly commentService: CommentsService) {}
 
-  //getAll(@Query("limit") limit = 100, @Query("offset") offset = 0) {
-    //return this.usersService.findAll();
- 
-
 	@Get()
 	@HttpCode(HttpStatus.OK)
-	getAll(@Query("limit") limit = 100, @Query("offset") offset = 0) {
-		return this.commentService.findAll();
+	async getAll(): Promise<{ data: Comment[] }> {
+		const comments = await this.commentService.findAll();
+		return { data: comments };
+	}
+
+	@Post()
+	@HttpCode(HttpStatus.CREATED)
+	createComment(@Body() comment: Comment): Promise<Comment> {
+		return this.commentService.create(comment);
 	}
 }
