@@ -3,35 +3,45 @@ import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 @Schema()
 export class User {
   @Prop({ unique: true })
-  nickname: String;
+  nickname: string;
   @Prop()
-  name: String;
+  name: string;
   @Prop()
   birthday: Date;
   @Prop()
-  pictureProfile: String;
+  pictureProfile: string;
   @Prop()
-  bannerProfile: String;
+  bannerProfile: string;
   @Prop()
-  biography: String;
+  biography: string;
   @Prop()
-  numberOfPoStS: Number;
+  numberOfPoStS: number;
   @Prop()
-  numberOfFollowerS: Number;
+  numberOfFollowerS: number;
   @Prop()
-  numberOfFollowed: Number;
+  numberOfFollowed: number;
   @Prop({ unique: true })
-  email: String;
+  email: string;
   @Prop()
-  password: String;
+  password: string;
   @Prop()
-  raza: String;
+  raza: string;
   @Prop()
-  sexo: String;
+  sexo: string;
   @Prop()
-  phoneNumber: String;
+  phoneNumber: string;
   @Prop({ default: "USER" })
-  role: String;
+  role: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    ret.id = ret._id;
+    delete ret.__v;
+    delete ret._id;
+    delete ret.password;
+   
+  }
+});
