@@ -6,12 +6,12 @@ import { CommentSchema } from "./entities/comment.entity";
 import { CommentsService } from "./services/comments.service";
 
 @Module({
-	imports: [
-		MongooseModule.forFeature([{ name: "Comments", schema: CommentSchema }]),
-		MongooseModule.forFeature([{ name: "Users", schema: UserSchema }])
-	],
+  imports: [
+    MongooseModule.forFeature([{ name: "Comments", schema: CommentSchema }]),
+    MongooseModule.forFeature([{ name: "Users", schema: UserSchema }])
+  ],
   controllers: [CommentsController],
-	exports: [CommentsService],
+  exports: [CommentsService],
   providers: [CommentsService]
 })
 export class CommentsModule {}

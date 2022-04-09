@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-  Query,
+  Query
 } from "@nestjs/common";
 
 import { UsersService } from "./users.service";

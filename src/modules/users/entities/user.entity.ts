@@ -1,9 +1,16 @@
-import { IsString, IsEmail, IsNotEmpty, IsPhoneNumber, IsDate, IsNumber } from "class-validator";
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsPhoneNumber,
+  IsDate,
+  IsNumber
+} from "class-validator";
 import { Schema, Prop } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 @Schema()
 export class User extends Document {
-  @Prop({ required: true, unique:true })
+  @Prop({ required: true, unique: true })
   @IsString()
   @IsNotEmpty()
   nickname: string;
@@ -48,7 +55,7 @@ export class User extends Document {
   @IsNotEmpty()
   numberOfFollowed: number;
 
-  @Prop({ required: true, unique: true})
+  @Prop({ required: true, unique: true })
   @IsEmail()
   @IsNotEmpty()
   email: string;
