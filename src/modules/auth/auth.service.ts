@@ -17,12 +17,12 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
     if(user) {
       const isMatch = Hash.compare(password, user.password);
-      if(isMatch) {
+      if(isMatch)
         return this.generateJWT(user);
-      }
-    } else {
-      throw new NotFoundException(`User not found. Verify your credentials.`);
-    }
+      else return new BadRequestException('Password or email is incorrect').getResponse();
+      
+    } else
+      return new NotFoundException(`User not found. Verify your credentials.`).getResponse();
   }
 
   generateJWT(user: User) {
@@ -35,7 +35,10 @@ export class AuthService {
   }
 
   async register(data: CreateUserDto) {
-    const user = await this.userService.create(data);
-    return await this.generateJWT(user);
+    const user = await this.userService.create(data) as User;
+    if(user.name)
+      return await this.generateJWT(user);
+    else
+      return user
   }
 }
