@@ -5,7 +5,6 @@ import { Model } from "mongoose";
 import { CreateUserDto } from './dtos/user.dtos';
 import { User } from "./entities/user.entity";
 import { Hash } from "../../utils/Hash";
-import { validateRequiredData } from '../../helpers/validateRequiredData';
 
 @Injectable()
 export class UsersService {
@@ -39,22 +38,22 @@ export class UsersService {
         `The user with the email: '${email}' already exists.`
       ).getResponse();
 
-    else if(!email) 
-      return new BadRequestException(`The field 'email' is required.`).getResponse();
+    // else if(!email) 
+    //   return new BadRequestException(`The field 'email' is required.`).getResponse();
     
     if (userFindWithNickname) {
       return new BadRequestException(
         `The user with the nickname: '${nickname}' already exists.`
         ).getResponse();
       }
-    else if(!nickname)
-      return new BadRequestException(`The field 'nickname' is required.`).getResponse();
+    // else if(!nickname)
+    //   return new BadRequestException(`The field 'nickname' is required.`).getResponse();
       
-    if(!password)
-      return new BadRequestException(`The field 'password' is required.`).getResponse();
+    // if(!password)
+    //   return new BadRequestException(`The field 'password' is required.`).getResponse();
     
-    if(!sexo)
-      return new BadRequestException(`The field 'sexo' is required.`).getResponse();
+    // if(!sexo)
+    //   return new BadRequestException(`The field 'sexo' is required.`).getResponse();
 
       
     const user = new this.userModel(data);
