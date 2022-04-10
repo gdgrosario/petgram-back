@@ -36,13 +36,13 @@ export class UsersService {
     if (userFindWithEmail) {
       return new BadRequestException(
         `The user with the email: '${email}' already exists.`
-      );
+      ).getResponse();
     }
 
     if (userFindWithNickname) {
       return new BadRequestException(
         `The user with the nickname: '${nickname}' already exists.`
-      );
+      ).getResponse();
     }
     const user = new this.userModel(data);
     user.password = Hash.make(password);
