@@ -15,7 +15,7 @@ import config from "../config/config";
           user,
           pass: password,
           dbName,
-          useCreateIndex: true,
+          useCreateIndex: true
         };
       },
       inject: [config.KEY]
