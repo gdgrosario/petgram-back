@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
+import {Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
 import { AppController } from "./app.controller";
@@ -12,7 +12,6 @@ import { PostsModule } from "../posts/posts.module";
 import { AuthModule } from "../auth/auth.module";
 
 import config from "../../config/config";
-import { validateRequiredData } from "../../middlewares/validateRequiredData";
 
 @Module({
   imports: [
@@ -31,10 +30,4 @@ import { validateRequiredData } from "../../middlewares/validateRequiredData";
   controllers: [AppController],
   providers: [AppService]
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
-    consumer
-      .apply(validateRequiredData)
-      .forRoutes({ path: "/auth/register", method: RequestMethod.POST });
-  }
-}
+export class AppModule {}
