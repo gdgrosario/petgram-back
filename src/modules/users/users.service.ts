@@ -27,23 +27,18 @@ export class UsersService {
     return await this.userModel.findOne({ email });
   }
 
-  async create(data: CreateUserDto): Promise<User | string | unknown> {
+  async create(data: CreateUserDto): Promise<User> {
     const { email, nickname, password } = data;
 
-    const userFindWithEmail = await this.userModel.findOne({ email });
-    const userFindWithNickname = await this.userModel.findOne({ nickname });
+    const userFindWithEmailAndNickname = await this.userModel.findOne({
+      $or: [{ email }, { nickname }]
+    });
 
-    if (userFindWithEmail) {
-      return new BadRequestException(
-        `The user with the email: '${email}' already exists.`
-      ).getResponse();
-    }
-
-    if (userFindWithNickname) {
-      return new BadRequestException(
-        `The user with the nickname: '${nickname}' already exists.`
-      ).getResponse();
-    }
+    if (userFindWithEmailAndNickname)
+      throw new BadRequestException(
+        "The user or nickname already exists."
+      )
+    
     const user = new this.userModel(data);
     user.password = Hash.make(password);
     return await user.save();

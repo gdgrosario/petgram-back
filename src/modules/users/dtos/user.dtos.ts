@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDateString, IsInt, IsEmail, IsOptional, Matches, MaxLength } from "class-validator";
+import { IsString, IsNotEmpty,  IsInt, IsEmail, IsOptional, Matches, MaxLength } from "class-validator";
 import { PartialType } from "@nestjs/mapped-types";
 
 export class CreateUserDto {
@@ -14,7 +14,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: "El nombre es requerido" })
   readonly name: string;
 
-  @IsDateString()
+  @IsOptional()
   @IsNotEmpty({ message: "La fecha de nacimiento es requerida" })
   readonly birthday: string;
 

@@ -38,12 +38,11 @@ export class AuthService {
     };
   }
 
-  async register(data: CreateUserDto): Promise<IResponseToken | string | unknown> {
-    const user = (await this.userService.create(data)) as User;
-		if (user.name) {
+  async register(data: CreateUserDto): Promise<IResponseToken> {
+    const user = await this.userService.create(data)
+		if (user) {
       return this.generateJWT(user);
-    } else {
-			return new BadRequestException("The user already exists").getResponse();
-		}
+    } 
+		throw new BadRequestException("The user already exists")
 	}
 }
