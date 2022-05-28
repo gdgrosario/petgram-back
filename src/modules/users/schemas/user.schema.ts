@@ -7,7 +7,7 @@ export class User {
   @Prop()
   name: string;
   @Prop()
-  birthday: Date;
+  birthday: string;
   @Prop()
   pictureProfile: string;
   @Prop()
