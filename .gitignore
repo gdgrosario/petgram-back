@@ -1,5 +1,6 @@
 # ignore NPM modules
 node_modules
+.log/
 
 # ignore transpiled files files
 dist

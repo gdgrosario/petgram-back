@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty,  IsInt, IsEmail, IsOptional, Matches, MaxLength } from "class-validator";
+import {
+  IsString,
+  IsNotEmpty,
+  IsInt,
+  IsEmail,
+  IsOptional,
+  Matches,
+  MaxLength
+} from "class-validator";
 import { PartialType } from "@nestjs/mapped-types";
 
 export class CreateUserDto {
@@ -6,8 +14,9 @@ export class CreateUserDto {
   @IsNotEmpty({ message: "El nickname es requerido" })
   //regular expression for nickname
   // eslint-disable-next-line no-useless-escape
-  @Matches(/^[a-z0-9_\.]+$/, { message: "El nickname debe contener solo 0-9, a-z, y -,." })
-
+  @Matches(/^[a-z0-9_\.]+$/, {
+    message: "El nickname debe contener solo 0-9, a-z, y -,."
+  })
   readonly nickname: string;
 
   @IsString()
