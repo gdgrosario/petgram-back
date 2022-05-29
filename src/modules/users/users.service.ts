@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-
+import { Hash } from "../../utils/Hash";
 import { CreateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
-import { Hash } from "../../utils/Hash";
 
 @Injectable()
 export class UsersService {
@@ -34,11 +33,10 @@ export class UsersService {
       $or: [{ email }, { nickname }]
     });
 
-    if (userFindWithEmailAndNickname)
-      throw new BadRequestException(
-        "The user or nickname already exists."
-      )
-    
+    if (userFindWithEmailAndNickname) {
+      throw new BadRequestException("The user or nickname already exists.");
+    }
+
     const user = new this.userModel(data);
     user.password = Hash.make(password);
     return await user.save();

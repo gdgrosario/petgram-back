@@ -20,12 +20,10 @@ export class AuthService {
       if (isMatch) {
         return this.generateJWT(user);
       } else {
-        return new BadRequestException("Password or email is incorrect").getResponse();
+        throw new BadRequestException("Password or email is incorrect");
       }
     } else {
-      return new NotFoundException(
-        `User not found. Verify your credentials.`
-      ).getResponse();
+      throw new NotFoundException(`User not found. Verify your credentials.`);
     }
   }
 
@@ -39,10 +37,11 @@ export class AuthService {
   }
 
   async register(data: CreateUserDto): Promise<IResponseToken> {
-    const user = await this.userService.create(data)
-		if (user) {
+    const user = await this.userService.create(data);
+    if (user) {
       return this.generateJWT(user);
-    } 
-		throw new BadRequestException("The user already exists")
-	}
+    }
+
+    throw new BadRequestException("The user already exists");
+  }
 }
