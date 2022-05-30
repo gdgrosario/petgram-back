@@ -4,11 +4,13 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
-  Query
+  Query,
+  UseGuards
 } from "@nestjs/common";
 
 import { UsersService } from "./users.service";
+import { User } from './entities/user.entity';
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("users")
 export class UsersController {
@@ -16,13 +18,15 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll(@Query("limit") limit = 100, @Query("offset") offset = 0) {
+  @UseGuards(AuthGuard("jwt"))
+  getAll(@Query("limit") limit = 100, @Query("offset") offset = 0):Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(":userId")
   @HttpCode(HttpStatus.OK)
-  getOne(@Param("userId", ParseIntPipe) userId: string) {
+  @UseGuards(AuthGuard("jwt"))
+  getOne(@Param("userId") userId: string):Promise<User> {
     return this.usersService.findOne(userId);
   }
 }

@@ -7,10 +7,12 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put
+  Put,
+  UseGuards
 } from "@nestjs/common";
 import { Comment } from "../entities/comment.entity";
 import { CommentsService } from "../services/comments.service";
+import { AuthGuard } from '@nestjs/passport';
 
 interface IResponseJson<T> {
   data: T;
@@ -23,6 +25,7 @@ export class CommentsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
   async getAll(): Promise<IResponseJson<Comment[]>> {
     const comments = await this.commentService.findAll();
     return { data: comments, message: "OK" };
@@ -30,6 +33,7 @@ export class CommentsController {
 
   @Get("/:id")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
   async getById(@Param("id") id: string): Promise<IResponseJson<Comment>> {
     const comment = await this.commentService.findById(id);
     return { data: comment };
@@ -37,6 +41,7 @@ export class CommentsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AuthGuard("jwt"))
   async createComment(@Body() comment: Comment): Promise<IResponseJson<Comment>> {
     const commentNew = await this.commentService.create(comment);
     return {
@@ -47,6 +52,7 @@ export class CommentsController {
 
   @Put("/:id")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
   async updateComment(
     @Body() comment: Comment,
     @Param("id") id: string
@@ -60,6 +66,7 @@ export class CommentsController {
 
   @Delete("/:id")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
   async deleteComment(
     @Param("id") id: string
   ): Promise<Omit<IResponseJson<Comment>, "data">> {

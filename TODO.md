@@ -19,7 +19,7 @@
 ## Implementaciones generales  
 
 - Modulo para el manejo de imagenes
-- Proteger las rutas (JWT)
+- Proteger las rutas (JWT) ✅
 - Configurar CORS
 
 ## Modulos eliminados 🗑️  
