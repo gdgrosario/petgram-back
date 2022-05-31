@@ -25,6 +25,14 @@ export class UsersController {
   getAll(@Query("limit") limit = 100, @Query("offset") offset = 0): Promise<User[]> {
     return this.usersService.findAll();
   }
+  
+  @Get("/profile")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  getProfile(@Request() req:any):Promise<User> {
+    const { id } = req.user 
+    return this.usersService.findOne(id)
+  }
 
   @Get(":userId")
   @HttpCode(HttpStatus.OK)
@@ -36,8 +44,8 @@ export class UsersController {
   @Put()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async update(@Body() updateUserDTO: UpdateUserDto, @Request() req: any) {
-    const { _id } = req.user;
-    return await this.usersService.updateProfile(_id, updateUserDTO);
+  async update(@Body() updateUserDTO: UpdateUserDto, @Request() req: any):Promise<User> {
+    const { id } = req.user;
+    return await this.usersService.updateProfile(id, updateUserDTO);
   }
 }
