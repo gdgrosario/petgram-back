@@ -10,9 +10,9 @@ import {
   Put,
   UseGuards
 } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import { Comment } from "../entities/comment.entity";
 import { CommentsService } from "../services/comments.service";
-import { AuthGuard } from '@nestjs/passport';
 
 interface IResponseJson<T> {
   data: T;

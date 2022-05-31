@@ -1,7 +1,6 @@
-import { Module, Global } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
-
 import config from "../config/config";
 
 @Global()
@@ -15,7 +14,8 @@ import config from "../config/config";
           user,
           pass: password,
           dbName,
-          useCreateIndex: true
+          useCreateIndex: true,
+          useFindAndModify: false
         };
       },
       inject: [config.KEY]

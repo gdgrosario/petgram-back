@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectModel } from "@nestjs/mongoose";
 import { isValidObjectId, Model } from "mongoose";
 import { Hash } from "../../utils/Hash";
-import { CreateUserDto } from "./dtos/user.dtos";
+import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
 
 @Injectable()
@@ -15,14 +15,14 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<User | undefined> {
-    if(isValidObjectId(id)){
+    if (isValidObjectId(id)) {
       const user = await this.userModel.findById(id);
       if (!user) {
         throw new NotFoundException(`The user with the ID: '${id}' was not found.`);
       }
       return user;
     }
-    throw new BadRequestException("id is invalid")
+    throw new BadRequestException("id is invalid");
   }
 
   async findByEmail(email: string): Promise<User> {
@@ -43,5 +43,11 @@ export class UsersService {
     const user = new this.userModel(data);
     user.password = Hash.make(password);
     return await user.save();
+  }
+
+  async updateProfile(id: string, data: UpdateUserDto): Promise<User> {
+    const user = await this.userModel.findByIdAndUpdate(id, data, { new: true });
+
+    return user;
   }
 }
