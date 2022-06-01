@@ -49,6 +49,13 @@ export class UsersController {
     return await this.usersService.updateProfile(id, updateUserDTO);
   }
 
+  @Get("/get-user-name/:userName")
+  @HttpCode(HttpStatus.OK)
+  getForUserName(@Param("userName") userName:string):Promise<User> {
+    return this.usersService.findOneByUserName(userName)
+  }
+
+
   @Put("/recover-password")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
