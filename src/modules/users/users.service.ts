@@ -50,4 +50,11 @@ export class UsersService {
 
     return user;
   }
+
+  async recoverPassword(id: string, password: string): Promise<{ message: string }> {
+    const user = await this.userModel.findById(id);
+    user.password = Hash.make(password);
+    await user.save();
+    return { message: "Updated successfully" };
+  }
 }
