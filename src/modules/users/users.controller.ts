@@ -48,4 +48,12 @@ export class UsersController {
     const { id } = req.user;
     return await this.usersService.updateProfile(id, updateUserDTO);
   }
+
+  @Put("/recover-password")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async recoverPassword(@Body() updateUser: UpdateUserDto, @Request() req: any) {
+    const { _id } = req.user;
+    return await this.usersService.recoverPassword(_id, updateUser.password);
+  }
 }
