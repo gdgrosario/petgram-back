@@ -64,7 +64,10 @@ export class UsersService {
 	}
 
 	async follow(id: string, idFollow: string): Promise<{ message: string }> {
+		const futureFollow = await this.userModel.findById(idFollow)
 		const userFollower = await this.userModel.find({ followers: { "$all": [idFollow] }, _id: id });
+		if(!futureFollow)
+			throw new BadRequestException("User not found")
 		if (userFollower.length > 0) {
 			throw new BadRequestException("you already follow this user");
 		} else {
@@ -72,7 +75,8 @@ export class UsersService {
 			const follower = await this.userModel.findById(idFollow);
 
 			await this.userModel.findByIdAndUpdate(user, {
-				$push: { followers: follower }
+				$push: { followers: follower },
+				$inc: { numberOfFollowed: 1 },
 			});
 		}
 
@@ -83,4 +87,27 @@ export class UsersService {
 		const users = await this.userModel.find({ nickname: { $regex: `^${nickname}`, $options: "i" } });
 		return users;
 	}
+
+	async unFollow(id: string, idFollow: string): Promise<{ message: string }> {
+		const user = await this.userModel.findById(id)
+		const followed = await this.userModel.findById(idFollow)
+		const exitFollow = await this.userModel.find({ followers: { "$all": [idFollow] }, _id: id })
+
+		if(!followed || exitFollow.length === 0)
+			throw new BadRequestException("User not found")
+
+		if(user.numberOfFollowed > 0){
+			await this.userModel.findByIdAndUpdate(user, {
+				$pull: { followers: followed._id },
+				$inc: { numberOfFollowed: -1 },
+			})
+
+			return { message: "Unfollowed successfully " }
+
+		}
+
+	}
+
+
+
 }

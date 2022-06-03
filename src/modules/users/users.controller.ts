@@ -68,6 +68,13 @@ export class UsersController {
     return this.usersService.follow(id, idFollow);
   }
 
+  @Put("/unfollow/:idfollow")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  unFollow(@Param("idfollow") idFollow: string, @Auth() {id}:User): Promise<{message: string}> {
+    return this.usersService.unFollow(id, idFollow);
+  }
+
   @Get("get-users-by-nickname/:nickname")
   @HttpCode(HttpStatus.OK)
   getUsersByNickname(@Param("nickname") nickname: string): Promise<User[]> {
