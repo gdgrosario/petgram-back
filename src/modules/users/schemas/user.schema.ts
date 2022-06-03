@@ -1,4 +1,5 @@
-import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Schema as MongooseSchema } from "mongoose";
 
 @Schema()
 export class User {
@@ -32,12 +33,14 @@ export class User {
   phoneNumber: string;
   @Prop({ default: "USER" })
   role: string;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
+  followers: MongooseSchema.Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.set("toJSON", {
-  transform: function (doc, ret) {
+  transform: function (_, ret) {
     ret.id = ret._id;
     delete ret.__v;
     delete ret._id;

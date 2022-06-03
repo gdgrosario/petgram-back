@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Post,
   Put,
   Query,
   Request,
@@ -25,13 +26,13 @@ export class UsersController {
   getAll(@Query("limit") limit = 100, @Query("offset") offset = 0): Promise<User[]> {
     return this.usersService.findAll();
   }
-  
+
   @Get("/profile")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  getProfile(@Request() req:any):Promise<User> {
-    const { id } = req.user 
-    return this.usersService.findOne(id)
+  getProfile(@Request() req: any): Promise<User> {
+    const { id } = req.user;
+    return this.usersService.findOne(id);
   }
 
   @Get(":userId")
@@ -44,17 +45,16 @@ export class UsersController {
   @Put()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async update(@Body() updateUserDTO: UpdateUserDto, @Request() req: any):Promise<User> {
+  async update(@Body() updateUserDTO: UpdateUserDto, @Request() req: any): Promise<User> {
     const { id } = req.user;
     return await this.usersService.updateProfile(id, updateUserDTO);
   }
 
   @Get("/get-user-name/:userName")
   @HttpCode(HttpStatus.OK)
-  getForUserName(@Param("userName") userName:string):Promise<User> {
-    return this.usersService.findOneByUserName(userName)
+  getForUserName(@Param("userName") userName: string): Promise<User> {
+    return this.usersService.findOneByUserName(userName);
   }
-
 
   @Put("/recover-password")
   @HttpCode(HttpStatus.OK)
@@ -62,5 +62,13 @@ export class UsersController {
   async recoverPassword(@Body() updateUser: UpdateUserDto, @Request() req: any) {
     const { _id } = req.user;
     return await this.usersService.recoverPassword(_id, updateUser.password);
+  }
+
+  @Post("/follow/:idfollow")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async follow(@Param("idfollow") idFollow: string, @Request() req: any) {
+    const { _id } = req.user;
+    return await this.usersService.follow(_id, idFollow);
   }
 }

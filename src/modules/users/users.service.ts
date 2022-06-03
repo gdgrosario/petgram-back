@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { isValidObjectId, Model } from "mongoose";
+import { isValidObjectId, Model, Types } from "mongoose";
 import { Hash } from "../../utils/Hash";
 import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
@@ -50,7 +50,7 @@ export class UsersService {
 
     return user;
   }
-  
+
   async findOneByUserName(userName: string): Promise<User> {
     const user = await this.userModel.findOne({ nickname: userName });
     return user;
@@ -61,5 +61,16 @@ export class UsersService {
     user.password = Hash.make(password);
     await user.save();
     return { message: "Updated successfully" };
+  }
+
+  async follow(id: string, idFollow: string): Promise<{ message: string }> {
+    const user = await this.userModel.findById(id);
+    const follower = await this.userModel.findById(idFollow);
+
+    await this.userModel.findByIdAndUpdate(user, {
+      $push: { followers: follower }
+    });
+
+    return { message: "Followed successfully " };
   }
 }
