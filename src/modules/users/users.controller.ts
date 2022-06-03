@@ -7,10 +7,10 @@ import {
   Param,
   Put,
   Query,
-  Request,
   UseGuards
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { Auth } from "../auth/decorator/auth.decorator";
 import { UpdateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
 import { UsersService } from "./users.service";
@@ -29,8 +29,7 @@ export class UsersController {
   @Get("/profile")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  getProfile(@Request() req:any):Promise<User> {
-    const { id } = req.user 
+  getProfile(@Auth() { id }:User ):Promise<User> {
     return this.usersService.findOne(id)
   }
 
@@ -44,9 +43,8 @@ export class UsersController {
   @Put()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async update(@Body() updateUserDTO: UpdateUserDto, @Request() req: any):Promise<User> {
-    const { id } = req.user;
-    return await this.usersService.updateProfile(id, updateUserDTO);
+  update(@Body() updateUserDTO: UpdateUserDto, @Auth() {id}:User ):Promise<User> {
+    return this.usersService.updateProfile(id, updateUserDTO);
   }
 
   @Get("/get-user-name/:userName")
@@ -59,8 +57,7 @@ export class UsersController {
   @Put("/recover-password")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async recoverPassword(@Body() updateUser: UpdateUserDto, @Request() req: any) {
-    const { _id } = req.user;
-    return await this.usersService.recoverPassword(_id, updateUser.password);
+  recoverPassword(@Body() updateUser: UpdateUserDto, @Auth() {id}:User ):Promise<{message: string}> {
+    return this.usersService.recoverPassword(id, updateUser.password);
   }
 }
