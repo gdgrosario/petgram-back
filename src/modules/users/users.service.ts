@@ -78,4 +78,9 @@ export class UsersService {
 
 		return { message: "Followed successfully " };
 	}
+
+	async findUsersByNickname(nickname: string): Promise<User[]> {
+		const users = await this.userModel.find({ nickname: { $regex: `^${nickname}`, $options: "i" } });
+		return users;
+	}
 }

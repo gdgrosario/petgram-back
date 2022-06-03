@@ -64,8 +64,13 @@ export class UsersController {
   @Post("/follow/:idfollow")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async follow(@Param("idfollow") idFollow: string, @Request() req: any) {
-    const { _id } = req.user;
-    return await this.usersService.follow(_id, idFollow);
+  follow(@Param("idfollow") idFollow: string, @Auth() {id}:User): Promise<{message: string}> {
+    return this.usersService.follow(id, idFollow);
+  }
+
+  @Get("get-users-by-nickname/:nickname")
+  @HttpCode(HttpStatus.OK)
+  getUsersByNickname(@Param("nickname") nickname: string): Promise<User[]> {
+    return this.usersService.findUsersByNickname(nickname);
   }
 }
