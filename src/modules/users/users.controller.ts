@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Post,
   Put,
   Query,
   UseGuards
@@ -25,7 +26,7 @@ export class UsersController {
   getAll(@Query("limit") limit = 100, @Query("offset") offset = 0): Promise<User[]> {
     return this.usersService.findAll();
   }
-  
+
   @Get("/profile")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
@@ -49,15 +50,22 @@ export class UsersController {
 
   @Get("/get-user-name/:userName")
   @HttpCode(HttpStatus.OK)
-  getForUserName(@Param("userName") userName:string):Promise<User> {
-    return this.usersService.findOneByUserName(userName)
+  getForUserName(@Param("userName") userName: string): Promise<User> {
+    return this.usersService.findOneByUserName(userName);
   }
-
 
   @Put("/recover-password")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
   recoverPassword(@Body() updateUser: UpdateUserDto, @Auth() {id}:User ):Promise<{message: string}> {
     return this.usersService.recoverPassword(id, updateUser.password);
+  }
+
+  @Post("/follow/:idfollow")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async follow(@Param("idfollow") idFollow: string, @Request() req: any) {
+    const { _id } = req.user;
+    return await this.usersService.follow(_id, idFollow);
   }
 }
