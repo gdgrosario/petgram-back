@@ -62,52 +62,65 @@ export class UsersService {
 		await user.save();
 		return { message: "Updated successfully" };
 	}
-
-	async follow(id: string, idFollow: string): Promise<{ message: string }> {
-		const futureFollow = await this.userModel.findById(idFollow)
-		const userFollower = await this.userModel.find({ followers: { "$all": [idFollow] }, _id: id });
-		if(!futureFollow)
-			throw new BadRequestException("User not found")
-		if (userFollower.length > 0) {
-			throw new BadRequestException("you already follow this user");
-		} else {
-			const user = await this.userModel.findById(id);
-			const follower = await this.userModel.findById(idFollow);
-
-			await this.userModel.findByIdAndUpdate(user, {
-				$push: { followers: follower },
-				$inc: { numberOfFollowed: 1 },
-			});
-		}
-
-		return { message: "Followed successfully " };
-	}
-
+	
 	async findUsersByNickname(nickname: string): Promise<User[]> {
 		const users = await this.userModel.find({ nickname: { $regex: `^${nickname}`, $options: "i" } });
 		return users;
 	}
 
-	async unFollow(id: string, idFollow: string): Promise<{ message: string }> {
-		const user = await this.userModel.findById(id)
-		const followed = await this.userModel.findById(idFollow)
-		const exitFollow = await this.userModel.find({ followers: { "$all": [idFollow] }, _id: id })
+	async follow(id: string, idFollow: string): Promise<{ message: string }> {
+		const user = await this.userModel.findById(id);
+		const futureFollower = await this.userModel.findById(idFollow)
+		const FollowInUser = await this.userModel.find(
+			{ _id: id, followeds: { $in: idFollow } }
+		)
 
-		if(!followed || exitFollow.length === 0)
+		if(!futureFollower || !user)
 			throw new BadRequestException("User not found")
+		if(id === idFollow)
+			throw new BadRequestException("You can't follow yourself")
+		if (FollowInUser.length > 0) {
+			throw new BadRequestException("you already follow this user");
+		} else {
 
-		if(user.numberOfFollowed > 0){
 			await this.userModel.findByIdAndUpdate(user, {
-				$pull: { followers: followed._id },
-				$inc: { numberOfFollowed: -1 },
+				$inc: { numberOfFollowed: 1 },
+				$push: { followeds: futureFollower },
 			})
 
-			return { message: "Unfollowed successfully " }
-
+			await this.userModel.findByIdAndUpdate(futureFollower, {
+				$push: { followers: user },
+				$inc: { numberOfFollowers: 1 },
+			})
+			return { message: "Followed successfully " };
 		}
 
 	}
 
+	async unFollow(id: string, idFollow: string): Promise<{ message: string }> {
+		const user = await this.userModel.findById(id)
+		const followed = await this.userModel.findById(idFollow)
+		const FollowInUser = await this.userModel.find(
+			{ _id: id, followeds: { $in: idFollow } }
+		)
 
+		if(!followed || !user)
+			throw new BadRequestException("User not found")
+		if(user.numberOfFollowed > 0 && FollowInUser.length > 0) {
+			await this.userModel.findByIdAndUpdate(user, {
+				$inc: { numberOfFollowed: -1 },
+				$pull: { followeds: followed.id },
+			})
+
+			await this.userModel.findByIdAndUpdate(followed, {
+				$pull: { followers: user.id },
+				$inc: { numberOfFollowers: -1 },
+			})
+
+			return { message: "Unfollowed successfully " }
+
+		}else throw new BadRequestException("You don't unfollow this user")
+
+	}
 
 }

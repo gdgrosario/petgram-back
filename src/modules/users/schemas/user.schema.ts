@@ -18,7 +18,7 @@ export class User {
   @Prop()
   numberOfPoStS: number;
   @Prop()
-  numberOfFollowerS: number;
+  numberOfFollowers: number;
   @Prop()
   numberOfFollowed: number;
   @Prop({ unique: true })
@@ -35,6 +35,8 @@ export class User {
   role: string;
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
   followers: MongooseSchema.Types.ObjectId[];
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
+  followeds: MongooseSchema.Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
