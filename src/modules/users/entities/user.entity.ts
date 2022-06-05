@@ -1,13 +1,14 @@
+import { Prop, Schema } from "@nestjs/mongoose";
 import {
-  IsString,
+  IsDate,
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsPhoneNumber,
-  IsDate,
-  IsNumber
+  IsString
 } from "class-validator";
-import { Schema, Prop } from "@nestjs/mongoose";
 import { Document } from "mongoose";
+
 @Schema()
 export class User extends Document {
   @Prop({ required: true, unique: true })
