@@ -122,6 +122,4 @@ export class UsersService {
 		} else throw new BadRequestException("You don't unfollow this user")
 
 	}
->>>>>>> f603938fa9cc2d018afba71f05b547f6dac422fa
-
 }
