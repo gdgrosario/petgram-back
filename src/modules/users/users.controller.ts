@@ -30,8 +30,8 @@ export class UsersController {
   @Get("/profile")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  getProfile(@Auth() { id }:User ):Promise<User> {
-    return this.usersService.findOne(id)
+  getProfile(@Auth() { id }: User): Promise<User> {
+    return this.usersService.findOne(id);
   }
 
   @Get(":userId")
@@ -44,7 +44,7 @@ export class UsersController {
   @Put()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  update(@Body() updateUserDTO: UpdateUserDto, @Auth() {id}:User ):Promise<User> {
+  update(@Body() updateUserDTO: UpdateUserDto, @Auth() { id }: User): Promise<User> {
     return this.usersService.updateProfile(id, updateUserDTO);
   }
 
@@ -57,21 +57,30 @@ export class UsersController {
   @Put("/recover-password")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  recoverPassword(@Body() updateUser: UpdateUserDto, @Auth() {id}:User ):Promise<{message: string}> {
+  recoverPassword(
+    @Body() updateUser: UpdateUserDto,
+    @Auth() { id }: User
+  ): Promise<{ message: string }> {
     return this.usersService.recoverPassword(id, updateUser.password);
   }
 
   @Post("/follow/:idfollow")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  follow(@Param("idfollow") idFollow: string, @Auth() {id}:User): Promise<{message: string}> {
+  follow(
+    @Param("idfollow") idFollow: string,
+    @Auth() { id }: User
+  ): Promise<{ message: string }> {
     return this.usersService.follow(id, idFollow);
   }
 
   @Put("/unfollow/:idfollow")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  unFollow(@Param("idfollow") idFollow: string, @Auth() {id}:User): Promise<{message: string}> {
+  unFollow(
+    @Param("idfollow") idFollow: string,
+    @Auth() { id }: User
+  ): Promise<{ message: string }> {
     return this.usersService.unFollow(id, idFollow);
   }
 
