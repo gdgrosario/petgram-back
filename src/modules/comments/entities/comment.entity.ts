@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IsNotEmpty, IsString } from "class-validator";
 import { Document, Schema as MongooseSchema } from "mongoose";
-import { User } from "../../users/schemas/user.schema";
+import { User } from "../../users/entities/user.entity";
 
 @Schema()
 export class Comment extends Document {
