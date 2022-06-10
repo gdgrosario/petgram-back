@@ -17,7 +17,8 @@ export class Post {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: Comment.name })
   comments: MongooseSchema.Types.ObjectId[];
 
-  //TODO: add image
+  @Prop({ required: true })
+  image: string;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

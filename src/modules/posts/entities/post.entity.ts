@@ -13,4 +13,7 @@ export class Posts extends Document {
 
   @IsNumber()
   likes: number;
+
+  @Prop({ required: true })
+  image: string;
 }

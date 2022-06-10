@@ -4,4 +4,8 @@ export class PostDto {
   @IsString()
   @IsNotEmpty()
   readonly description: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly image: string;
 }
