@@ -6,17 +6,16 @@ import { PostsController } from "./controllers/posts.controller";
 import { PostSchema } from "./schemas/post.schema";
 import { PostsService } from "./services/posts.service";
 
-
 @Module({
-	imports: [
-		MongooseModule.forFeature([
-			{ name: "Posts", schema: PostSchema },
-			{ name: "Users", schema: UserSchema },
-			{ name: "Comments", schema: CommentSchema }
-		])
-	],
-	controllers: [PostsController],
-	providers: [PostsService],
-	exports: [PostsService]
+  imports: [
+    MongooseModule.forFeature([
+      { name: "Posts", schema: PostSchema },
+      { name: "Users", schema: UserSchema },
+      { name: "Comments", schema: CommentSchema }
+    ])
+  ],
+  controllers: [PostsController],
+  providers: [PostsService],
+  exports: [PostsService]
 })
-export class PostsModule { }
+export class PostsModule {}
