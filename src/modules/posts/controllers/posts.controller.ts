@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards
+} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
 import { User } from "../../users/entities/user.entity";
@@ -14,6 +24,17 @@ interface IResponseJson<T> {
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
 
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async allPost(): Promise<IResponseJson<PostSchema[]>> {
+    const posts = await this.postService.findAll();
+    return {
+      data: posts,
+      message: "All post"
+    };
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard("jwt"))
@@ -26,5 +47,15 @@ export class PostsController {
       data: newPost,
       message: "Post created"
     };
+  }
+
+  @Delete("/:id")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async deletePost(
+    @Param("id") id: string
+  ): Promise<Omit<IResponseJson<PostSchema>, "data">> {
+    await this.postService.delete(id);
+    return { message: "Post deleted" };
   }
 }
