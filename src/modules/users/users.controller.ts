@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -8,13 +9,18 @@ import {
   Post,
   Put,
   Query,
-  UseGuards
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { Auth } from "../auth/decorator/auth.decorator";
+import { Auth } from '../auth/decorator/auth.decorator';
 import { UpdateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
 import { UsersService } from "./users.service";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ValidateImage } from '../../utils/validateImage';
+import { BadRequestException } from '@nestjs/common';
 
 @Controller("users")
 export class UsersController {
@@ -84,9 +90,34 @@ export class UsersController {
     return this.usersService.unFollow(id, idFollow);
   }
 
-  @Get("get-users-by-nickname/:nickname")
+  @Get("/get-users-by-nickname/:nickname")
   @HttpCode(HttpStatus.OK)
   getUsersByNickname(@Param("nickname") nickname: string): Promise<User[]> {
     return this.usersService.findUsersByNickname(nickname);
   }
+
+  @Post("/upload-avatar")
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('img', {
+    fileFilter: ValidateImage
+  }))
+  @UseGuards(AuthGuard("jwt"))
+  uploadAvatar(
+    @Auth() { id }: User,
+    @UploadedFile() file: Express.Multer.File
+  ): Promise<{ message: string }> {
+    if(!file){
+      throw new BadRequestException("Error media type")
+    }
+    return this.usersService.uploadAvatar(id, file);
+  }
+
+  @Delete("/remove-avatar")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  removeAvatar(@Auth() { id }: User):Promise<{message: string}>{
+    return this.usersService.removeAvatar(id)
+  }
+
+  
 }

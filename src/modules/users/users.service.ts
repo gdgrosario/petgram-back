@@ -4,10 +4,14 @@ import { isValidObjectId, Model } from "mongoose";
 import { Hash } from "../../utils/Hash";
 import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
 import { User } from "./entities/user.entity";
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel("Users") private readonly userModel: Model<User>) {}
+  constructor(
+    @InjectModel("Users") private readonly userModel: Model<User>,
+    private readonly cloudinaryService: CloudinaryService
+    ) {}
 
   async findAll(): Promise<User[]> {
     const users = await this.userModel.find();
@@ -118,5 +122,41 @@ export class UsersService {
 
       return { message: "Unfollowed successfully " };
     } else throw new BadRequestException("You don't unfollow this user");
+  }
+
+  async uploadAvatar(id: string, file:Express.Multer.File): Promise<{message: string}> {
+    const findUser = await this.userModel.findById(id);
+    if (!findUser) throw new BadRequestException("User not found");
+    try {
+      if(findUser.avatar && findUser.avatar.public_id) {
+        const { public_id, url } = await this.cloudinaryService.updateAvatar(findUser.avatar.public_id, file, findUser.nickname)
+        await this.userModel.findByIdAndUpdate(id, { 
+          avatar: {
+            public_id, 
+            url
+          }}, {new: true})
+      }else{
+        const { public_id, url } = await this.cloudinaryService.uploadAvatar(file, findUser.nickname)
+        await this.userModel.findByIdAndUpdate(id, {
+          avatar:{
+          public_id,
+          url
+        }}, {new: true});
+      }
+
+      return {message: "Avatar uploaded successfully"};
+    } catch (error) {
+      throw new BadRequestException("Error uploading avatar");
+    }
+  }
+
+  async removeAvatar(id: string): Promise<{message: string}> {
+    const findUser = await this.userModel.findById(id);
+    if (!findUser) throw new BadRequestException("User not found");
+
+    await this.cloudinaryService.removeMedia(findUser.avatar.public_id);
+    await this.userModel.findByIdAndUpdate(id, {avatar: {public_id: "", url: ""}}, {new: true});
+    
+    return {message: "Avatar removed successfully"};
   }
 }

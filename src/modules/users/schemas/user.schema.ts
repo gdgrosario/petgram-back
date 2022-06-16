@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Schema as MongooseSchema } from "mongoose";
 import { Post } from "src/modules/posts/schemas/post.schema";
+import { MediaType } from '../../cloudinary/cloudinary.schema';
 
 @Schema()
 export class User {
@@ -11,9 +12,9 @@ export class User {
   @Prop()
   birthday: string;
   @Prop()
-  pictureProfile: string;
+  avatar: MediaType
   @Prop()
-  bannerProfile: string;
+  banner: MediaType;
   @Prop()
   biography: string;
   @Prop()

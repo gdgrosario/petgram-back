@@ -4,10 +4,12 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPhoneNumber,
   IsString
 } from "class-validator";
 import { Document } from "mongoose";
+import { MediaType } from '../../cloudinary/cloudinary.schema';
 
 @Schema()
 export class User extends Document {
@@ -26,16 +28,12 @@ export class User extends Document {
   @IsNotEmpty()
   birthday: string;
 
-  @Prop({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  pictureProfile: string;
+  @Prop()
+  avatar:MediaType
 
-  @Prop({ required: true })
-  @IsString()
-  @IsNotEmpty()
-  bannerProfile: string;
-
+  @Prop()
+  banner: MediaType;
+  
   @Prop({ required: true })
   @IsString()
   @IsNotEmpty()

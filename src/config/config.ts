@@ -11,6 +11,11 @@ export default registerAs("config", () => {
       port: parseInt(process.env.MONGO_PORT, 10) || 27017,
       host: process.env.MONGO_HOST || "localhost",
       connection: process.env.MONGO_CONNECTION || "mongodb"
+    },
+    cloudinary: {
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.API_KEY_CLOUDINARY,
+      api_secret: process.env.API_SECRET_CLOUDINARY
     }
   };
 });
