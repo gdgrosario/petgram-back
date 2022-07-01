@@ -16,11 +16,12 @@ import {
 import { AuthGuard } from "@nestjs/passport";
 import { Auth } from '../auth/decorator/auth.decorator';
 import { UpdateUserDto } from "./dtos/user.dtos";
-import { User } from "./entities/user.entity";
 import { UsersService } from "./users.service";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateImage } from '../../utils/validateImage';
 import { BadRequestException } from '@nestjs/common';
+import { User } from "./schemas/user.schema";
+import { ObjectId } from 'mongoose';
 
 @Controller("users")
 export class UsersController {
@@ -74,7 +75,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
   follow(
-    @Param("idfollow") idFollow: string,
+    @Param("idfollow") idFollow: ObjectId,
     @Auth() { id }: User
   ): Promise<{ message: string }> {
     return this.usersService.follow(id, idFollow);
@@ -84,7 +85,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
   unFollow(
-    @Param("idfollow") idFollow: string,
+    @Param("idfollow") idFollow: ObjectId,
     @Auth() { id }: User
   ): Promise<{ message: string }> {
     return this.usersService.unFollow(id, idFollow);
