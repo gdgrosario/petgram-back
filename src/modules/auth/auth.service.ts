@@ -2,12 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { JwtService } from "@nestjs/jwt";
 
 import { UsersService } from "../users/users.service";
-import { User } from "../users/entities/user.entity";
 import { IPayloadToken } from "./models/token.model";
 import { Hash } from "../../utils/Hash";
 import { LoginDto } from "./dto/login.dto";
 import { CreateUserDto } from "../users/dtos/user.dtos";
 import { IResponseToken } from "./interfaces/auth.interface";
+import { User } from "../users/schemas/user.schema";
 
 @Injectable()
 export class AuthService {

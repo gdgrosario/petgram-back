@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { isValidObjectId, Model } from "mongoose";
+import { isValidObjectId, Model, ObjectId } from "mongoose";
 import { Hash } from "../../utils/Hash";
 import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
-import { User } from "./entities/user.entity";
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { User } from "./schemas/user.schema";
 
 @Injectable()
 export class UsersService {
@@ -44,6 +44,7 @@ export class UsersService {
       throw new BadRequestException("The email or nickname already exists.");
     }
 
+
     const user = new this.userModel(data);
     user.password = Hash.make(password);
     return await user.save();
@@ -74,12 +75,12 @@ export class UsersService {
     return users;
   }
 
-  async follow(id: string, idFollow: string): Promise<{ message: string }> {
+  async follow(id: ObjectId, idFollow: ObjectId): Promise<{ message: string }> {
     const user = await this.userModel.findById(id);
     const futureFollower = await this.userModel.findById(idFollow);
     const FollowInUser = await this.userModel.find({
       _id: id,
-      followeds: { $in: idFollow }
+      followeds: idFollow
     });
 
     if (!futureFollower || !user) throw new BadRequestException("User not found");
@@ -89,27 +90,28 @@ export class UsersService {
     } else {
       await this.userModel.findByIdAndUpdate(user, {
         $inc: { numberOfFollowed: 1 },
-        $push: { followeds: futureFollower }
+        $push: { followeds: futureFollower.id }
       });
 
       await this.userModel.findByIdAndUpdate(futureFollower, {
-        $push: { followers: user },
+        $push: { followers: user.id },
         $inc: { numberOfFollowers: 1 }
       });
       return { message: "Followed successfully " };
     }
   }
 
-  async unFollow(id: string, idFollow: string): Promise<{ message: string }> {
+  async unFollow(id: string, idFollow: ObjectId): Promise<{ message: string }> {
     const user = await this.userModel.findById(id);
     const followed = await this.userModel.findById(idFollow);
+
     const FollowInUser = await this.userModel.find({
       _id: id,
-      followeds: { $in: idFollow }
-    });
+      followeds: idFollow 
+    })
 
     if (!followed || !user) throw new BadRequestException("User not found");
-    if (user.numberOfFollowed > 0 && FollowInUser.length > 0) {
+    if (user.numberOfFollowed > 0 && FollowInUser) {
       await this.userModel.findByIdAndUpdate(user, {
         $inc: { numberOfFollowed: -1 },
         $pull: { followeds: followed.id }

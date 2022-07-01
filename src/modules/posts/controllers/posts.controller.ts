@@ -11,9 +11,9 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
-import { User } from "../../users/entities/user.entity";
 import { Post as PostSchema } from "../schemas/post.schema";
 import { PostsService } from "../services/posts.service";
+import { User } from '../../users/schemas/user.schema';
 
 interface IResponseJson<T> {
   data: T;

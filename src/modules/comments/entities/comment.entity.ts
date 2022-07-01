@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IsNotEmpty, IsString } from "class-validator";
 import { Document, Schema as MongooseSchema } from "mongoose";
-import { User } from "../../users/entities/user.entity";
 
 @Schema()
 export class Comment extends Document {
@@ -10,7 +9,7 @@ export class Comment extends Document {
   @IsNotEmpty()
   comment: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, unique: false })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Users", unique: false })
   user: MongooseSchema.Types.ObjectId;
 }
 
