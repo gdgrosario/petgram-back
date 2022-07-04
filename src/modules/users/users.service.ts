@@ -20,7 +20,9 @@ export class UsersService {
 
   async findOne(id: string): Promise<User | undefined> {
     if (isValidObjectId(id)) {
-      const user = await this.userModel.findById(id);
+      const user = await this.userModel.findById(id)
+            .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
+            .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
       if (!user) {
         throw new NotFoundException(`The user with the ID: '${id}' was not found.`);
       }
@@ -57,7 +59,9 @@ export class UsersService {
   }
 
   async findOneByUserName(userName: string): Promise<User> {
-    const user = await this.userModel.findOne({ nickname: userName });
+    const user = await this.userModel.findOne({ nickname: userName })
+                .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
+                .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
     return user;
   }
 
