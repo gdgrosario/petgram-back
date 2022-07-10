@@ -7,13 +7,18 @@ import {
   HttpStatus,
   Param,
   Post,
-  UseGuards
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
 import { Post as PostSchema } from "../schemas/post.schema";
 import { PostsService } from "../services/posts.service";
 import { User } from '../../users/schemas/user.schema';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ValidateImage } from '../../../utils/validateImage';
+import { PostDto } from '../dtos/post.dtos';
 
 interface IResponseJson<T> {
   data: T;
@@ -38,15 +43,19 @@ export class PostsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard("jwt"))
+  @UseInterceptors(FileInterceptor('img', {
+    fileFilter: ValidateImage
+  }))
   async createPost(
-    @Body() post: PostSchema,
-    @Auth() { id }: User
-  ): Promise<IResponseJson<PostSchema>> {
-    const newPost = await this.postService.create(post, id);
+    @Body() postData: PostDto,
+    @Auth() { id }: User,
+    @UploadedFile() file: Express.Multer.File
+  ): Promise<IResponseJson<PostSchema>>{
+    const newPost = await this.postService.create(file, postData.description, id);
     return {
       data: newPost,
       message: "Post created"
-    };
+    }
   }
 
   @Delete("/:id")

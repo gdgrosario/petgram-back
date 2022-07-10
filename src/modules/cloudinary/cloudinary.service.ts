@@ -19,6 +19,22 @@ export class CloudinaryService {
     })
   }
 
+  async uploadPost (file:Express.Multer.File, nickName:string): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    return new Promise((resolve, reject) => {
+      const upload = v2.uploader.upload_stream({
+        folder: `${nickName}/postsImages`,
+        transformation:[
+          { width: 800, height: 800, crop: "scale" }
+        ]
+      }, (error, result) => {
+        if (error) return reject(error)
+        resolve(result)
+      })
+      toStream(file.buffer).pipe(upload)
+    })
+  }
+
+
   async removeMedia (publicId:string): Promise<void> {
     try {
       await v2.uploader.destroy(publicId)

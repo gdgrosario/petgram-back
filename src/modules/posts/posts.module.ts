@@ -5,6 +5,7 @@ import { UserSchema } from "../users/schemas/user.schema";
 import { PostsController } from "./controllers/posts.controller";
 import { PostSchema } from "./schemas/post.schema";
 import { PostsService } from "./services/posts.service";
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { PostsService } from "./services/posts.service";
       { name: "Posts", schema: PostSchema },
       { name: "Users", schema: UserSchema },
       { name: "Comments", schema: CommentSchema }
-    ])
+    ]),
+    CloudinaryModule
   ],
   controllers: [PostsController],
   providers: [PostsService],
