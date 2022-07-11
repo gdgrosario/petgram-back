@@ -20,24 +20,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateImage } from '../../../utils/validateImage';
 import { PostDto } from '../dtos/post.dtos';
 
-interface IResponseJson<T> {
-  data: T;
-  message?: string;
-}
-
 @Controller("posts")
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard("jwt"))
-  async allPost(): Promise<IResponseJson<PostSchema[]>> {
-    const posts = await this.postService.findAll();
-    return {
-      data: posts,
-      message: "All post"
-    };
+  async allPost(): Promise<PostSchema[]> {
+    return await this.postService.findAll();
   }
 
   @Post()
@@ -50,12 +40,8 @@ export class PostsController {
     @Body() postData: PostDto,
     @Auth() { id }: User,
     @UploadedFile() file: Express.Multer.File
-  ): Promise<IResponseJson<PostSchema>>{
-    const newPost = await this.postService.create(file, postData.description, id);
-    return {
-      data: newPost,
-      message: "Post created"
-    }
+  ): Promise<PostSchema>{
+    return await this.postService.create(file, postData.description, id);
   }
 
   @Delete("/:id")
@@ -63,7 +49,7 @@ export class PostsController {
   @UseGuards(AuthGuard("jwt"))
   async deletePost(
     @Param("id") id: string
-  ): Promise<Omit<IResponseJson<PostSchema>, "data">> {
+  ): Promise<{message: string}> {
     await this.postService.delete(id);
     return { message: "Post deleted" };
   }

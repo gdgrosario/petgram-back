@@ -17,7 +17,14 @@ export class PostsService {
     ) {}
 
   async findAll(): Promise<Post[]> {
-    return this.postModel.find().populate("comments", "", this.commentModel);
+    return this.postModel.find()
+      .populate("comments", "", this.commentModel)
+      .populate("user", [
+        "nickname",
+        "name",
+        "avatar"
+      ], this.userModel);
+
   }
 
   async create(imageFile: Express.Multer.File, description:string, idUser: string): Promise<Post> {
@@ -31,7 +38,8 @@ export class PostsService {
         image: {
           url,
           public_id
-        }
+        },
+        user: idUser
       }).save();
 
       await this.userModel.findByIdAndUpdate(idUser, {
@@ -40,6 +48,7 @@ export class PostsService {
 
       return post
     } catch (error) {
+      console.log(error)
       throw new BadRequestException("Error publishing post")
     }
   }

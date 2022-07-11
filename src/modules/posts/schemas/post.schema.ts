@@ -13,6 +13,9 @@ export class Post{
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Comments" })
   comments: MongooseSchema.Types.ObjectId[];
 
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Users", unique: true })
+  user: MongooseSchema.Types.ObjectId;
+
   @Prop({ required: true })
   image: MediaType;
 }
