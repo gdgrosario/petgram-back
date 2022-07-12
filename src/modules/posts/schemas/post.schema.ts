@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Schema as MongooseSchema, Document } from 'mongoose';
-import { MediaType } from '../../cloudinary/cloudinary.schema';
+import { Schema as MongooseSchema, Document } from "mongoose";
+import { MediaType } from "../../cloudinary/cloudinary.schema";
 
 @Schema()
-export class Post{
+export class Post {
   @Prop({ required: true })
   description: string;
 
@@ -20,14 +20,14 @@ export class Post{
   image: MediaType;
 }
 
-
-
 export const PostSchema = SchemaFactory.createForClass(Post);
 
 PostSchema.set("toJSON", {
   transform: function (_, ret) {
     ret.id = ret._id;
+    ret.image = ret.image.url;
     delete ret.__v;
     delete ret._id;
+    delete ret.image.public_id;
   }
 });
