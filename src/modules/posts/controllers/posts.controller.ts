@@ -7,18 +7,18 @@ import {
   HttpStatus,
   Param,
   Post,
-  UseGuards
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
 import { Post as PostSchema } from "../schemas/post.schema";
 import { PostsService } from "../services/posts.service";
 import { User } from '../../users/schemas/user.schema';
-
-interface IResponseJson<T> {
-  data: T;
-  message?: string;
-}
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ValidateImage } from '../../../utils/validateImage';
+import { PostDto } from '../dtos/post.dtos';
 
 @Controller("posts")
 export class PostsController {
@@ -26,27 +26,22 @@ export class PostsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard("jwt"))
-  async allPost(): Promise<IResponseJson<PostSchema[]>> {
-    const posts = await this.postService.findAll();
-    return {
-      data: posts,
-      message: "All post"
-    };
+  async allPost(): Promise<PostSchema[]> {
+    return await this.postService.findAll();
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard("jwt"))
+  @UseInterceptors(FileInterceptor('img', {
+    fileFilter: ValidateImage
+  }))
   async createPost(
-    @Body() post: PostSchema,
-    @Auth() { id }: User
-  ): Promise<IResponseJson<PostSchema>> {
-    const newPost = await this.postService.create(post, id);
-    return {
-      data: newPost,
-      message: "Post created"
-    };
+    @Body() postData: PostDto,
+    @Auth() { id }: User,
+    @UploadedFile() file: Express.Multer.File
+  ): Promise<PostSchema>{
+    return await this.postService.create(file, postData.description, id);
   }
 
   @Delete("/:id")
@@ -54,7 +49,7 @@ export class PostsController {
   @UseGuards(AuthGuard("jwt"))
   async deletePost(
     @Param("id") id: string
-  ): Promise<Omit<IResponseJson<PostSchema>, "data">> {
+  ): Promise<{message: string}> {
     await this.postService.delete(id);
     return { message: "Post deleted" };
   }

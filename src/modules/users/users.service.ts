@@ -5,11 +5,13 @@ import { Hash } from "../../utils/Hash";
 import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { User } from "./schemas/user.schema";
+import { Post } from '../posts/schemas/post.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel("Users") private readonly userModel: Model<User>,
+    @InjectModel("Posts") private readonly postModel: Model<Post>,
     private readonly cloudinaryService: CloudinaryService
     ) {}
 
@@ -23,7 +25,8 @@ export class UsersService {
       const user = await this.userModel.findById(id)
             .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
             .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
-      if (!user) {
+            .populate("posts", "", this.postModel)
+            if (!user) {
         throw new NotFoundException(`The user with the ID: '${id}' was not found.`);
       }
       return user;
@@ -62,6 +65,8 @@ export class UsersService {
     const user = await this.userModel.findOne({ nickname: userName })
                 .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
                 .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
+                .populate("posts", "", this.postModel)
+
     return user;
   }
 
