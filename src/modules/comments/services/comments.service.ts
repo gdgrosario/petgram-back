@@ -29,18 +29,18 @@ export class CommentsService {
     return comment;
   }
 
-  async create(data: CommentDto): Promise<Comment> {
-    if(!isValidObjectId(data.userId) || !isValidObjectId(data.postId)) throw new NotFoundException(`Ids not valid`);
+  async create(data: CommentDto, ownerUserId:string): Promise<Comment> {
+    if(!isValidObjectId(ownerUserId) || !isValidObjectId(data.postId)) throw new NotFoundException(`Ids not valid`);
 
-    const findUser = await this.userModel.findById(data.userId);
+    const findUser = await this.userModel.findById(ownerUserId);
     const findPost = await this.postModel.findById(data.postId);
     
-    if(!findUser) throw new NotFoundException(`The user with the ID: '${data.userId}' was not found.`);
+    if(!findUser) throw new NotFoundException(`The user with the ID: '${ownerUserId}' was not found.`);
     if(!findPost) throw new NotFoundException(`The post with the ID: '${data.postId}' was not found.`);
 
     const comment = await new this.commentModel({
       comment: data.comment,
-      user: data.userId,
+      user: ownerUserId,
     }).save()
 
     await findPost.updateOne({

@@ -8,8 +8,6 @@ export class CommentDto {
   readonly comment: string;
 
   @IsNotEmpty()
-  readonly userId: MongooseSchema.Types.ObjectId;
-  @IsNotEmpty()
   readonly postId: MongooseSchema.Types.ObjectId;
 }
 
