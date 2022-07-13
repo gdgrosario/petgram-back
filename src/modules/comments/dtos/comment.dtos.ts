@@ -8,7 +8,9 @@ export class CommentDto {
   readonly comment: string;
 
   @IsNotEmpty()
-  readonly user: MongooseSchema.Types.ObjectId;
+  readonly userId: MongooseSchema.Types.ObjectId;
+  @IsNotEmpty()
+  readonly postId: MongooseSchema.Types.ObjectId;
 }
 
 export class EditCommentDto extends PartialType(CommentDto) {}

@@ -14,3 +14,11 @@ export class Comment extends Document {
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
+
+CommentSchema.set("toJSON", {
+  transform: function (_, ret) {
+    ret.id = ret._id;
+    delete ret.__v;
+    delete ret._id;
+  }
+});
