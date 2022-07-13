@@ -22,11 +22,7 @@ export class PostsService {
       .populate("user", ["nickname", "name", "avatar"], this.userModel);
   }
 
-  async create(
-    imageFile: Express.Multer.File,
-    description: string,
-    idUser: string
-  ): Promise<Post> {
+  async create(imageFile: Express.Multer.File, description: string, idUser: string) {
     const findUser = await this.userModel.findById(idUser);
     if (!findUser) throw new BadRequestException("User not found");
     if (!imageFile) throw new BadRequestException("Image for post is required");
@@ -51,8 +47,6 @@ export class PostsService {
         },
         { new: true }
       );
-
-      return post;
     } catch (error) {
       throw new BadRequestException("Error publishing post");
     }
