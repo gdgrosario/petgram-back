@@ -20,6 +20,11 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { ValidateImage } from "../../../utils/validateImage";
 import { PostDto } from "../dtos/post.dtos";
 
+interface PostResponse {
+  message: string,
+  data?: PostSchema,
+  status: number
+}
 @Controller("posts")
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
@@ -42,8 +47,9 @@ export class PostsController {
     @Body() postData: PostDto,
     @Auth() { id }: User,
     @UploadedFile() file: Express.Multer.File
-  ) {
+  ):Promise<PostResponse> {
     await this.postService.create(file, postData.description, id);
+    return { message: "Post created", status: 201 };
   }
 
   @Delete("/:id")
