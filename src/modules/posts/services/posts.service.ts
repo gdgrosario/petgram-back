@@ -18,8 +18,20 @@ export class PostsService {
   async findAll(): Promise<Post[]> {
     return this.postModel
       .find()
-      .populate("comments", "", this.commentModel)
-      .populate("user", ["nickname", "name", "avatar"], this.userModel);
+      .populate({
+        path: "user",
+        model: this.userModel,
+        select: ["nickname", "name", "id", "avatar"]
+      })
+      .populate({
+        path: "comments",
+        model: this.commentModel,
+        populate: {
+          path: "user",
+          model: this.userModel,
+          select: ["nickname", "name", "id", "avatar"]
+        }
+      });
   }
 
   async create(imageFile: Express.Multer.File, description: string, idUser: string) {
