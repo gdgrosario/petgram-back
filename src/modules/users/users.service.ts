@@ -3,9 +3,9 @@ import { InjectModel } from "@nestjs/mongoose";
 import { isValidObjectId, Model, ObjectId } from "mongoose";
 import { Hash } from "../../utils/Hash";
 import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { User } from "./schemas/user.schema";
-import { Post } from '../posts/schemas/post.schema';
+import { Post } from "../posts/schemas/post.schema";
 
 @Injectable()
 export class UsersService {
@@ -13,7 +13,7 @@ export class UsersService {
     @InjectModel("Users") private readonly userModel: Model<User>,
     @InjectModel("Posts") private readonly postModel: Model<Post>,
     private readonly cloudinaryService: CloudinaryService
-    ) {}
+  ) {}
 
   async findAll(): Promise<User[]> {
     const users = await this.userModel.find();
@@ -22,11 +22,12 @@ export class UsersService {
 
   async findOne(id: string): Promise<User | undefined> {
     if (isValidObjectId(id)) {
-      const user = await this.userModel.findById(id)
-            .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
-            .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
-            .populate("posts", "", this.postModel)
-            if (!user) {
+      const user = await this.userModel
+        .findById(id)
+        .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
+        .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
+        .populate("posts", "", this.postModel);
+      if (!user) {
         throw new NotFoundException(`The user with the ID: '${id}' was not found.`);
       }
       return user;
@@ -49,7 +50,6 @@ export class UsersService {
       throw new BadRequestException("The email or nickname already exists.");
     }
 
-
     const user = new this.userModel(data);
     user.password = Hash.make(password);
     return await user.save();
@@ -62,10 +62,11 @@ export class UsersService {
   }
 
   async findOneByUserName(userName: string): Promise<User> {
-    const user = await this.userModel.findOne({ nickname: userName })
-                .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
-                .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
-                .populate("posts", "", this.postModel)
+    const user = await this.userModel
+      .findOne({ nickname: userName })
+      .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
+      .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
+      .populate("posts", "", this.postModel);
 
     return user;
   }
@@ -116,8 +117,8 @@ export class UsersService {
 
     const FollowInUser = await this.userModel.find({
       _id: id,
-      followeds: idFollow 
-    })
+      followeds: idFollow
+    });
 
     if (!followed || !user) throw new BadRequestException("User not found");
     if (user.numberOfFollowed > 0 && FollowInUser) {
@@ -135,39 +136,63 @@ export class UsersService {
     } else throw new BadRequestException("You don't unfollow this user");
   }
 
-  async uploadAvatar(id: string, file:Express.Multer.File): Promise<{message: string}> {
+  async uploadAvatar(
+    id: string,
+    file: Express.Multer.File
+  ): Promise<{ message: string }> {
     const findUser = await this.userModel.findById(id);
     if (!findUser) throw new BadRequestException("User not found");
     try {
-      if(findUser.avatar && findUser.avatar.public_id) {
-        const { public_id, url } = await this.cloudinaryService.updateAvatar(findUser.avatar.public_id, file, findUser.nickname)
-        await this.userModel.findByIdAndUpdate(id, { 
-          avatar: {
-            public_id, 
-            url
-          }}, {new: true})
-      }else{
-        const { public_id, url } = await this.cloudinaryService.uploadAvatar(file, findUser.nickname)
-        await this.userModel.findByIdAndUpdate(id, {
-          avatar:{
-          public_id,
-          url
-        }}, {new: true});
+      if (findUser.avatar && findUser.avatar.public_id) {
+        const { public_id, url } = await this.cloudinaryService.updateAvatar(
+          findUser.avatar.public_id,
+          file,
+          findUser.nickname
+        );
+        await this.userModel.findByIdAndUpdate(
+          id,
+          {
+            avatar: {
+              public_id,
+              url
+            }
+          },
+          { new: true }
+        );
+      } else {
+        const { public_id, url } = await this.cloudinaryService.uploadAvatar(
+          file,
+          findUser.nickname
+        );
+        await this.userModel.findByIdAndUpdate(
+          id,
+          {
+            avatar: {
+              public_id,
+              url
+            }
+          },
+          { new: true }
+        );
       }
 
-      return {message: "Avatar uploaded successfully"};
+      return { message: "Avatar uploaded successfully" };
     } catch (error) {
       throw new BadRequestException("Error uploading avatar");
     }
   }
 
-  async removeAvatar(id: string): Promise<{message: string}> {
+  async removeAvatar(id: string): Promise<{ message: string }> {
     const findUser = await this.userModel.findById(id);
     if (!findUser) throw new BadRequestException("User not found");
 
     await this.cloudinaryService.removeMedia(findUser.avatar.public_id);
-    await this.userModel.findByIdAndUpdate(id, {avatar: {public_id: "", url: ""}}, {new: true});
-    
-    return {message: "Avatar removed successfully"};
+    await this.userModel.findByIdAndUpdate(
+      id,
+      { avatar: { public_id: "", url: "" } },
+      { new: true }
+    );
+
+    return { message: "Avatar removed successfully" };
   }
 }

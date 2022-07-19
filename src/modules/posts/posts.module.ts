@@ -5,7 +5,7 @@ import { UserSchema } from "../users/schemas/user.schema";
 import { PostsController } from "./controllers/posts.controller";
 import { PostSchema } from "./schemas/post.schema";
 import { PostsService } from "./services/posts.service";
-import { CloudinaryModule } from '../cloudinary/cloudinary.module';
+import { CloudinaryModule } from "../cloudinary/cloudinary.module";
 
 @Module({
   imports: [

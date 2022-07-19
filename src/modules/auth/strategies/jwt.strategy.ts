@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import config from "../../../config/config";
 import { UsersService } from "../../users/users.service";
 import { IPayloadToken } from "../models/token.model";
-import { User } from '../../users/schemas/user.schema';
+import { User } from "../../users/schemas/user.schema";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {

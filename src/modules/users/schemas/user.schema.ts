@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Schema as MongooseSchema } from "mongoose";
 import { Post } from "src/modules/posts/schemas/post.schema";
-import { MediaType } from '../../cloudinary/cloudinary.schema';
+import { MediaType } from "../../cloudinary/cloudinary.schema";
 
 @Schema()
-export class User extends Document{
+export class User extends Document {
   @Prop({ unique: true })
   nickname: string;
   @Prop()
@@ -12,7 +12,7 @@ export class User extends Document{
   @Prop()
   birthday: string;
   @Prop()
-  avatar: MediaType
+  avatar: MediaType;
   @Prop()
   banner: MediaType;
   @Prop()
@@ -35,11 +35,11 @@ export class User extends Document{
   phoneNumber: string;
   @Prop({ default: "USER" })
   role: string;
-  @Prop({  type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
   followers: MongooseSchema.Types.ObjectId[];
-  @Prop({  type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name, unique: true })
   followeds: MongooseSchema.Types.ObjectId[];
-  @Prop({  type: MongooseSchema.Types.ObjectId, ref: Post.name })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Post.name })
   posts: MongooseSchema.Types.ObjectId[];
 }
 
