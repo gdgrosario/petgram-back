@@ -13,9 +13,9 @@ import {
 import { AuthGuard } from "@nestjs/passport";
 import { Comment } from "../entities/comment.entity";
 import { CommentsService } from "../services/comments.service";
-import { CommentDto, EditCommentDto } from '../dtos/comment.dtos';
+import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
-import { User } from '../../users/schemas/user.schema';
+import { User } from "../../users/schemas/user.schema";
 
 interface IResponseJson<T> {
   data: T;
@@ -45,7 +45,10 @@ export class CommentsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard("jwt"))
-  async createComment( @Body() comment: CommentDto, @Auth() {id}:User): Promise<IResponseJson<Comment>> {
+  async createComment(
+    @Body() comment: CommentDto,
+    @Auth() { id }: User
+  ): Promise<IResponseJson<Comment>> {
     const commentNew = await this.commentService.create(comment, id);
     return {
       data: commentNew,

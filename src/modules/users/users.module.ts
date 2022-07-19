@@ -4,14 +4,14 @@ import { UserSchema } from "./schemas/user.schema";
 
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
-import { CloudinaryModule } from '../cloudinary/cloudinary.module';
-import { PostSchema } from '../posts/schemas/post.schema';
+import { CloudinaryModule } from "../cloudinary/cloudinary.module";
+import { PostSchema } from "../posts/schemas/post.schema";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: "Users", schema: UserSchema },
-      { name: "Posts", schema: PostSchema },
+      { name: "Posts", schema: PostSchema }
     ]),
     CloudinaryModule
   ],
