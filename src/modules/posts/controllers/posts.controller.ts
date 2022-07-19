@@ -21,9 +21,9 @@ import { ValidateImage } from "../../../utils/validateImage";
 import { PostDto } from "../dtos/post.dtos";
 
 interface PostResponse {
-  message: string,
-  data?: PostSchema,
-  status: number
+  message: string;
+  data?: PostSchema;
+  status: number;
 }
 @Controller("posts")
 export class PostsController {
@@ -47,7 +47,7 @@ export class PostsController {
     @Body() postData: PostDto,
     @Auth() { id }: User,
     @UploadedFile() file: Express.Multer.File
-  ):Promise<PostResponse> {
+  ): Promise<PostResponse> {
     await this.postService.create(file, postData.description, id);
     return { message: "Post created", status: 201 };
   }
