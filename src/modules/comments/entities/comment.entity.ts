@@ -11,6 +11,8 @@ export class Comment extends Document {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Users", unique: false })
   user: MongooseSchema.Types.ObjectId;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Posts", unique: false })
+  post: MongooseSchema.Types.ObjectId;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
@@ -20,5 +22,6 @@ CommentSchema.set("toJSON", {
     ret.id = ret._id;
     delete ret.__v;
     delete ret._id;
+    delete ret.post;
   }
 });
