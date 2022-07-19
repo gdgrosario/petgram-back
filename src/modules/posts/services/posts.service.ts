@@ -30,6 +30,9 @@ export class PostsService {
           path: "user",
           model: this.userModel,
           select: ["nickname", "name", "id", "avatar"]
+        },
+        options: {
+          limit: 2
         }
       });
   }

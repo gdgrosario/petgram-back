@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, isValidObjectId } from "mongoose";
+import { Model, isValidObjectId, ObjectId } from "mongoose";
 import { User } from "../../users/schemas/user.schema";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Comment } from "../entities/comment.entity";
@@ -29,6 +29,22 @@ export class CommentsService {
     return comment;
   }
 
+  async getAllComentsInPost(postId: string): Promise<Comment[]> {
+    if (!isValidObjectId(postId)) throw new BadRequestException("Id not valid");
+
+    const findCommentsInPost = await this.commentModel
+      .find({
+        post: postId as unknown as ObjectId
+      })
+      .populate({
+        path: "user",
+        select: ["name", "nickname", "avatar"]
+      });
+
+    if (findCommentsInPost.length > 0) return findCommentsInPost;
+    throw new NotFoundException("Post in comment not found");
+  }
+
   async create(data: CommentDto, ownerUserId: string): Promise<Comment> {
     if (!isValidObjectId(ownerUserId) || !isValidObjectId(data.postId))
       throw new NotFoundException(`Ids not valid`);
@@ -47,7 +63,8 @@ export class CommentsService {
 
     const comment = await new this.commentModel({
       comment: data.comment,
-      user: ownerUserId
+      user: ownerUserId,
+      post: data.postId
     }).save();
 
     await findPost.updateOne({

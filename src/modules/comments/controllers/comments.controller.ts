@@ -41,6 +41,13 @@ export class CommentsController {
     const comment = await this.commentService.findById(id);
     return { data: comment };
   }
+  @Get("/get-comments-in-post/:postId")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async getCommentsInPost(@Param("postId") postId: string): Promise<Comment[]> {
+    const comment = await this.commentService.getAllComentsInPost(postId);
+    return comment;
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
