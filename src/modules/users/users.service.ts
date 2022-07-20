@@ -36,15 +36,21 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    return await this.userModel.findOne({ email });
+    return await this.userModel
+      .findOne({ email })
+      .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
+      .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel);
   }
 
   async create(data: CreateUserDto): Promise<User> {
     const { email, nickname, password } = data;
 
-    const userFindWithEmailAndNickname = await this.userModel.findOne({
-      $or: [{ email }, { nickname }]
-    });
+    const userFindWithEmailAndNickname = await this.userModel
+      .findOne({
+        $or: [{ email }, { nickname }]
+      })
+      .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
+      .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel);
 
     if (userFindWithEmailAndNickname) {
       throw new BadRequestException("The email or nickname already exists.");
