@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
@@ -16,6 +17,7 @@ import { CommentsService } from "../services/comments.service";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
 import { User } from "../../users/schemas/user.schema";
+import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
 
 interface IResponseJson<T> {
   data: T;
@@ -29,8 +31,10 @@ export class CommentsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async getAll(): Promise<IResponseJson<Comment[]>> {
-    const comments = await this.commentService.findAll();
+  async getAll(
+    @Query() { skip, limit }: PaginationParamsDto
+  ): Promise<IResponseJson<Comment[]>> {
+    const comments = await this.commentService.findAll({ skip, limit });
     return { data: comments, message: "OK" };
   }
 
@@ -44,8 +48,14 @@ export class CommentsController {
   @Get("/get-comments-in-post/:postId")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
-  async getCommentsInPost(@Param("postId") postId: string): Promise<Comment[]> {
-    const comment = await this.commentService.getAllComentsInPost(postId);
+  async getCommentsInPost(
+    @Param("postId") postId: string,
+    @Query() { skip, limit }: PaginationParamsDto
+  ): Promise<Comment[]> {
+    const comment = await this.commentService.getAllComentsInPost(postId, {
+      skip,
+      limit
+    });
     return comment;
   }
 

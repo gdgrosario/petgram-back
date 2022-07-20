@@ -5,6 +5,8 @@ import { User } from "../../users/schemas/user.schema";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Comment } from "../entities/comment.entity";
 import { Post } from "../../posts/schemas/post.schema";
+import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
+import { PaginationModel } from "../../../utils/pagination";
 
 @Injectable()
 export class CommentsService {
@@ -14,9 +16,13 @@ export class CommentsService {
     @InjectModel("Posts") private readonly postModel: Model<Post>
   ) {}
 
-  async findAll(): Promise<Comment[]> {
-    const comments = await this.commentModel.find().populate("user", "", this.userModel);
-    return comments;
+  async findAll({ skip, limit }: PaginationParamsDto): Promise<Comment[]> {
+    const queryComment = this.commentModel.find().populate("user", "", this.userModel);
+
+    return await PaginationModel<Comment>({
+      paramsPagination: { skip, limit },
+      model: queryComment
+    });
   }
 
   async findById(id: string): Promise<Comment> {
@@ -29,10 +35,13 @@ export class CommentsService {
     return comment;
   }
 
-  async getAllComentsInPost(postId: string): Promise<Comment[]> {
+  async getAllComentsInPost(
+    postId: string,
+    { skip, limit }: PaginationParamsDto
+  ): Promise<Comment[]> {
     if (!isValidObjectId(postId)) throw new BadRequestException("Id not valid");
 
-    const findCommentsInPost = await this.commentModel
+    const queryCommentInPost = this.commentModel
       .find({
         post: postId as unknown as ObjectId
       })
@@ -41,7 +50,13 @@ export class CommentsService {
         select: ["name", "nickname", "avatar"]
       });
 
-    if (findCommentsInPost.length > 0) return findCommentsInPost;
+    const response = await PaginationModel<Comment>({
+      paramsPagination: { skip, limit },
+      model: queryCommentInPost
+    });
+
+    if (response.length > 0) return response;
+
     throw new NotFoundException("Post in comment not found");
   }
 
