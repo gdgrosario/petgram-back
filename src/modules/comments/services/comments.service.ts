@@ -7,6 +7,7 @@ import { Comment } from "../entities/comment.entity";
 import { Post } from "../../posts/schemas/post.schema";
 import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
 import { PaginationModel } from "../../../utils/pagination";
+import { ResponseComment } from "../interface/response";
 
 @Injectable()
 export class CommentsService {
@@ -38,7 +39,7 @@ export class CommentsService {
   async getAllComentsInPost(
     postId: string,
     { skip, limit }: PaginationParamsDto
-  ): Promise<Comment[]> {
+  ): Promise<ResponseComment<Comment[]>> {
     if (!isValidObjectId(postId)) throw new BadRequestException("Id not valid");
 
     const queryCommentInPost = this.commentModel
@@ -50,12 +51,19 @@ export class CommentsService {
         select: ["name", "nickname", "avatar"]
       });
 
+    const count = await this.commentModel
+      .find({ post: postId as unknown as ObjectId })
+      .countDocuments();
+
     const response = await PaginationModel<Comment>({
       paramsPagination: { skip, limit },
       model: queryCommentInPost
     });
-
-    if (response.length > 0) return response;
+    if (response.length > 0)
+      return {
+        data: response,
+        count
+      };
 
     throw new NotFoundException("Post in comment not found");
   }

@@ -31,9 +31,7 @@ export class PostsService {
           model: this.userModel,
           select: ["nickname", "name", "id", "avatar"]
         },
-        options: {
-          limit: 2
-        }
+        perDocumentLimit: 2
       });
   }
 
