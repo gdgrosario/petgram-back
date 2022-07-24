@@ -90,13 +90,18 @@ export class CommentsService {
       post: data.postId
     }).save();
 
+    const populateUser = await this.commentModel.findById(comment.id).populate({
+      path: "user",
+      select: ["name", "nickname", "avatar"]
+    });
+
     await findPost.updateOne({
       $push: {
         comments: comment.id
       }
     });
 
-    return comment;
+    return populateUser;
   }
 
   async update(id: string, data: EditCommentDto): Promise<Comment> {
