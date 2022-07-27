@@ -59,7 +59,7 @@ export class CommentsService {
       paramsPagination: { skip, limit },
       model: queryCommentInPost
     });
-    if (response.length > 0)
+    if (response)
       return {
         data: response,
         count
