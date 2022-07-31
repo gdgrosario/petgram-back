@@ -1,10 +1,13 @@
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { Injectable, BadRequestException, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { User } from "src/modules/users/schemas/user.schema";
 import { Comment } from "../../comments/entities/comment.entity";
 import { Post } from "../schemas/post.schema";
 import { CloudinaryService } from "../../cloudinary/cloudinary.service";
+import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
+import { PaginationModel } from "../../../utils/pagination";
+import { ReponsePagination } from "src/interfaces/responses";
 
 @Injectable()
 export class PostsService {
@@ -15,8 +18,11 @@ export class PostsService {
     private readonly cloudinaryService: CloudinaryService
   ) {}
 
-  async findAll(): Promise<Post[]> {
-    return this.postModel
+  async findAll({
+    skip,
+    limit
+  }: PaginationParamsDto): Promise<ReponsePagination<Post[]>> {
+    const queryPost = this.postModel
       .find()
       .populate({
         path: "user",
@@ -33,6 +39,21 @@ export class PostsService {
         },
         perDocumentLimit: 2
       });
+
+    const count = await this.postModel.find().countDocuments();
+
+    const response = await PaginationModel<Post>({
+      paramsPagination: { skip, limit },
+      model: queryPost
+    });
+
+    if (response)
+      return {
+        data: response,
+        count
+      };
+
+    throw new NotFoundException("Post in comment not found");
   }
 
   async create(imageFile: Express.Multer.File, description: string, idUser: string) {
@@ -61,6 +82,7 @@ export class PostsService {
         { new: true }
       );
     } catch (error) {
+      console.log(error);
       throw new BadRequestException("Error publishing post");
     }
   }

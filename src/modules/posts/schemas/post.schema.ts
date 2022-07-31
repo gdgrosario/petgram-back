@@ -13,7 +13,7 @@ export class Post {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Comments" })
   comments: MongooseSchema.Types.ObjectId[];
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Users", unique: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Users" })
   user: MongooseSchema.Types.ObjectId;
 
   @Prop({ required: true })
