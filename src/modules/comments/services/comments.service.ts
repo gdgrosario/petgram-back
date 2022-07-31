@@ -5,7 +5,7 @@ import { User } from "../../users/schemas/user.schema";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Comment } from "../entities/comment.entity";
 import { Post } from "../../posts/schemas/post.schema";
-import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
+import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { PaginationModel } from "../../../utils/pagination";
 import { ResponseComment } from "../interface/response";
 

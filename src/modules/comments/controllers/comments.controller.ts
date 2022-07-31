@@ -17,7 +17,7 @@ import { CommentsService } from "../services/comments.service";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
 import { User } from "../../users/schemas/user.schema";
-import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
+import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { IResponseJson, ResponseComment } from "../interface/response";
 
 @Controller("comments")

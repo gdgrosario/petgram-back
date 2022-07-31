@@ -1,5 +1,5 @@
 import { Query } from "mongoose";
-import { PaginationParamsDto } from "../modules/comments/dtos/paginationParams.dtos";
+import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
 
 interface IPaginationModel<T> {
   paramsPagination: PaginationParamsDto;
