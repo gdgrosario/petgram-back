@@ -85,9 +85,12 @@ export class UsersService {
   }
 
   async findUsersByNickname(nickname: string): Promise<User[]> {
-    const users = await this.userModel.find({
-      nickname: { $regex: `^${nickname}`, $options: "i" }
-    });
+    const users = await this.userModel.find(
+      {
+        nickname: { $regex: `^${nickname}`, $options: "i" }
+      },
+      { nickname: 1, name: 1, avatar: 1 }
+    );
     return users;
   }
 
