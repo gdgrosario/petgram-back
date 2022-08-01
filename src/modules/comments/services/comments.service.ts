@@ -5,8 +5,9 @@ import { User } from "../../users/schemas/user.schema";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Comment } from "../entities/comment.entity";
 import { Post } from "../../posts/schemas/post.schema";
-import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
+import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { PaginationModel } from "../../../utils/pagination";
+import { ResponseComment } from "../interface/response";
 
 @Injectable()
 export class CommentsService {
@@ -38,7 +39,7 @@ export class CommentsService {
   async getAllComentsInPost(
     postId: string,
     { skip, limit }: PaginationParamsDto
-  ): Promise<Comment[]> {
+  ): Promise<ResponseComment<Comment[]>> {
     if (!isValidObjectId(postId)) throw new BadRequestException("Id not valid");
 
     const queryCommentInPost = this.commentModel
@@ -50,12 +51,19 @@ export class CommentsService {
         select: ["name", "nickname", "avatar"]
       });
 
+    const count = await this.commentModel
+      .find({ post: postId as unknown as ObjectId })
+      .countDocuments();
+
     const response = await PaginationModel<Comment>({
       paramsPagination: { skip, limit },
       model: queryCommentInPost
     });
-
-    if (response.length > 0) return response;
+    if (response)
+      return {
+        data: response,
+        count
+      };
 
     throw new NotFoundException("Post in comment not found");
   }
@@ -82,13 +90,18 @@ export class CommentsService {
       post: data.postId
     }).save();
 
+    const populateUser = await this.commentModel.findById(comment.id).populate({
+      path: "user",
+      select: ["name", "nickname", "avatar"]
+    });
+
     await findPost.updateOne({
       $push: {
         comments: comment.id
       }
     });
 
-    return comment;
+    return populateUser;
   }
 
   async update(id: string, data: EditCommentDto): Promise<Comment> {

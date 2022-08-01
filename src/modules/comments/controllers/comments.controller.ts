@@ -17,12 +17,8 @@ import { CommentsService } from "../services/comments.service";
 import { CommentDto, EditCommentDto } from "../dtos/comment.dtos";
 import { Auth } from "src/modules/auth/decorator/auth.decorator";
 import { User } from "../../users/schemas/user.schema";
-import { PaginationParamsDto } from "../dtos/paginationParams.dtos";
-
-interface IResponseJson<T> {
-  data: T;
-  message?: string;
-}
+import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
+import { IResponseJson, ResponseComment } from "../interface/response";
 
 @Controller("comments")
 export class CommentsController {
@@ -51,7 +47,7 @@ export class CommentsController {
   async getCommentsInPost(
     @Param("postId") postId: string,
     @Query() { skip, limit }: PaginationParamsDto
-  ): Promise<Comment[]> {
+  ): Promise<ResponseComment<Comment[]>> {
     const comment = await this.commentService.getAllComentsInPost(postId, {
       skip,
       limit

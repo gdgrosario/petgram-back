@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors
@@ -19,6 +20,8 @@ import { User } from "../../users/schemas/user.schema";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ValidateImage } from "../../../utils/validateImage";
 import { PostDto } from "../dtos/post.dtos";
+import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
+import { ReponsePagination } from "src/interfaces/responses";
 
 interface PostResponse {
   message: string;
@@ -31,8 +34,10 @@ export class PostsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async allPost(): Promise<PostSchema[]> {
-    return await this.postService.findAll();
+  async allPost(
+    @Query() { skip, limit }: PaginationParamsDto
+  ): Promise<ReponsePagination<PostSchema[]>> {
+    return this.postService.findAll({ skip, limit });
   }
 
   @Post()

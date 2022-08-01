@@ -108,7 +108,7 @@ export class UsersController {
   uploadAvatar(
     @Auth() { id }: User,
     @UploadedFile() file: Express.Multer.File
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; url: string }> {
     if (!file) {
       throw new BadRequestException("Error media type");
     }

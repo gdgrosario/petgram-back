@@ -85,9 +85,12 @@ export class UsersService {
   }
 
   async findUsersByNickname(nickname: string): Promise<User[]> {
-    const users = await this.userModel.find({
-      nickname: { $regex: `^${nickname}`, $options: "i" }
-    });
+    const users = await this.userModel.find(
+      {
+        nickname: { $regex: `^${nickname}`, $options: "i" }
+      },
+      { nickname: 1, name: 1, avatar: 1 }
+    );
     return users;
   }
 
@@ -145,7 +148,7 @@ export class UsersService {
   async uploadAvatar(
     id: string,
     file: Express.Multer.File
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; url: string }> {
     const findUser = await this.userModel.findById(id);
     if (!findUser) throw new BadRequestException("User not found");
     try {
@@ -165,6 +168,7 @@ export class UsersService {
           },
           { new: true }
         );
+        return { message: "Uploaded successfully", url };
       } else {
         const { public_id, url } = await this.cloudinaryService.uploadAvatar(
           file,
@@ -180,9 +184,9 @@ export class UsersService {
           },
           { new: true }
         );
-      }
 
-      return { message: "Avatar uploaded successfully" };
+        return { message: "Uploaded successfully", url };
+      }
     } catch (error) {
       throw new BadRequestException("Error uploading avatar");
     }
