@@ -82,7 +82,6 @@ export class PostsService {
         { new: true }
       );
     } catch (error) {
-      console.log(error);
       throw new BadRequestException("Error publishing post");
     }
   }
