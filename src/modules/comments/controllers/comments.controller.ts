@@ -73,7 +73,7 @@ export class CommentsController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("jwt"))
   async updateComment(
-    @Body() comment: EditCommentDto,
+    @Body("comment") comment: EditCommentDto["comment"],
     @Param("id") id: string
   ): Promise<IResponseJson<Comment>> {
     const commentUpdate = await this.commentService.update(id, comment);

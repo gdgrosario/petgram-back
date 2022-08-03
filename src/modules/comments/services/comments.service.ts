@@ -104,20 +104,25 @@ export class CommentsService {
     return populateUser;
   }
 
-  async update(id: string, data: EditCommentDto): Promise<Comment> {
+  async update(id: string, comment: string): Promise<Comment> {
     if (!isValidObjectId(id)) throw new NotFoundException(`Id not valid`);
-
     const findComment = await this.commentModel.findById(id);
     if (!findComment)
       throw new NotFoundException(`The comment with the ID: '${id}' was not found.`);
 
-    const commentUpdate = await this.commentModel.findByIdAndUpdate(
-      id,
-      {
-        comment: data.comment
-      },
-      { new: true }
-    );
+    const commentUpdate = await this.commentModel
+      .findByIdAndUpdate(
+        id,
+        {
+          comment: comment
+        },
+        { new: true }
+      )
+      .populate({
+        path: "user",
+        select: ["name", "nickname", "avatar"]
+      });
+
     return commentUpdate;
   }
 
