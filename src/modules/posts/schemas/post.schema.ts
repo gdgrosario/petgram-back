@@ -8,7 +8,10 @@ export class Post {
   description: string;
 
   @Prop({ default: 0 })
-  likes: number;
+  numberOflikes: number;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Users", unique: true })
+  userLikes: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Comments" })
   comments: MongooseSchema.Types.ObjectId[];

@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, isValidObjectId, ObjectId } from "mongoose";
 import { User } from "src/modules/users/schemas/user.schema";
 import { Comment } from "../../comments/entities/comment.entity";
 import { Post } from "../schemas/post.schema";
@@ -8,6 +8,7 @@ import { CloudinaryService } from "../../cloudinary/cloudinary.service";
 import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { PaginationModel } from "../../../utils/pagination";
 import { ReponsePagination } from "src/interfaces/responses";
+import { UserBasic } from "../interface/responses";
 
 @Injectable()
 export class PostsService {
@@ -28,6 +29,12 @@ export class PostsService {
         path: "user",
         model: this.userModel,
         select: ["nickname", "name", "id", "avatar"]
+      })
+      .populate({
+        path: "userLikes",
+        model: this.userModel,
+        select: ["nickname", "name", "id", "avatar"],
+        perDocumentLimit: 3
       })
       .populate({
         path: "comments",
@@ -88,5 +95,68 @@ export class PostsService {
 
   async delete(id: string): Promise<void> {
     await this.postModel.findByIdAndRemove(id);
+  }
+
+  async createLike(userId: string, postId: string): Promise<{ message: string }> {
+    if (!isValidObjectId(postId) || !isValidObjectId(userId))
+      throw new BadRequestException("Invalid id");
+
+    const post = await this.postModel.findById(postId);
+
+    if (!post) throw new BadRequestException("Post not found");
+    const findUserInPostLike = await this.postModel.findOne({
+      _id: postId,
+      userLikes: userId as unknown as ObjectId
+    });
+    if (findUserInPostLike) throw new BadRequestException("User already liked this post");
+
+    await post.updateOne({
+      $inc: { numberOflikes: 1 }
+    });
+    await post.updateOne({
+      $push: { userLikes: userId }
+    });
+    return { message: "Liked successfully" };
+  }
+
+  async removeLike(userId: string, postId: string): Promise<{ message: string }> {
+    if (!isValidObjectId(postId) || !isValidObjectId(userId))
+      throw new BadRequestException("Invalid id");
+
+    const post = await this.postModel.findById(postId);
+
+    if (!post) throw new BadRequestException("User or post not found");
+
+    const findUserInPostLike = await this.postModel.findOne({
+      _id: postId,
+      userLikes: userId as unknown as ObjectId
+    });
+
+    if (!findUserInPostLike)
+      throw new BadRequestException("User already removed his like");
+
+    await post.updateOne({
+      $inc: { numberOflikes: -1 }
+    });
+
+    await post.updateOne({
+      $pull: { userLikes: userId }
+    });
+
+    return { message: "Like removed successfully" };
+  }
+
+  async getAllLikesInPost(postId: string): Promise<UserBasic[]> {
+    if (!isValidObjectId(postId)) throw new BadRequestException("Invalid id");
+
+    const post = await this.postModel.findById(postId).populate({
+      path: "userLikes",
+      model: this.userModel,
+      select: ["nickname", "name", "id", "avatar"]
+    });
+
+    if (!post) throw new BadRequestException("Post not found");
+
+    return post.userLikes as unknown as UserBasic[];
   }
 }

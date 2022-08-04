@@ -6,7 +6,9 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
+  Put,
   Query,
   UploadedFile,
   UseGuards,
@@ -22,6 +24,7 @@ import { ValidateImage } from "../../../utils/validateImage";
 import { PostDto } from "../dtos/post.dtos";
 import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { ReponsePagination } from "src/interfaces/responses";
+import { UserBasic } from "../interface/responses";
 
 interface PostResponse {
   message: string;
@@ -63,5 +66,32 @@ export class PostsController {
   async deletePost(@Param("id") id: string): Promise<{ message: string }> {
     await this.postService.delete(id);
     return { message: "Post deleted" };
+  }
+
+  @Patch("/like/:postId")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async createLikeInPost(
+    @Auth() { id }: User,
+    @Param("postId") postId: string
+  ): Promise<{ message: string }> {
+    return this.postService.createLike(id, postId);
+  }
+
+  @Patch("/remove-like/:postId")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async removeLike(
+    @Auth() { id }: User,
+    @Param("postId") postId: string
+  ): Promise<{ message: string }> {
+    return this.postService.removeLike(id, postId);
+  }
+
+  @Get("/user-in-likes-post/:postId")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("jwt"))
+  async getUserInLikes(@Param("postId") postId: string): Promise<UserBasic[]> {
+    return this.postService.getAllLikesInPost(postId);
   }
 }
