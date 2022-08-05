@@ -6,12 +6,14 @@ import { CreateUserDto, UpdateUserDto } from "./dtos/user.dtos";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { User } from "./schemas/user.schema";
 import { Post } from "../posts/schemas/post.schema";
+import { Comment } from "../comments/entities/comment.entity";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel("Users") private readonly userModel: Model<User>,
     @InjectModel("Posts") private readonly postModel: Model<Post>,
+    @InjectModel("Comments") private readonly commentModel: Model<Comment>,
     private readonly cloudinaryService: CloudinaryService
   ) {}
 
@@ -70,9 +72,39 @@ export class UsersService {
   async findOneByUserName(userName: string): Promise<User> {
     const user = await this.userModel
       .findOne({ nickname: userName })
+      .select([
+        "nickname",
+        "name",
+        "id",
+        "avatar",
+        "numberOfFollowers",
+        "numberOfFollowed",
+        "posts",
+        "followeds",
+        "followers"
+      ])
       .populate("followeds", ["nickname", "name", "id", "avatar"], this.userModel)
       .populate("followers", ["nickname", "name", "id", "avatar"], this.userModel)
-      .populate("posts", "", this.postModel);
+      .populate({
+        path: "posts",
+        model: this.postModel,
+        populate: [
+          {
+            path: "comments",
+            model: this.commentModel,
+            populate: {
+              path: "user",
+              model: this.userModel,
+              select: ["nickname", "name", "id", "avatar"]
+            }
+          },
+          {
+            path: "userLikes",
+            model: this.userModel,
+            select: ["nickname", "name", "id", "avatar"]
+          }
+        ]
+      });
 
     return user;
   }
