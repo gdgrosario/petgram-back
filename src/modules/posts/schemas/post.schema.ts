@@ -31,6 +31,5 @@ PostSchema.set("toJSON", {
     ret.image = ret.image.url;
     delete ret.__v;
     delete ret._id;
-    delete ret.image.public_id;
   }
 });
