@@ -24,8 +24,7 @@ export const PaginationModel = async <T>({
   const { skip, limit } = paramsPagination;
   if (!skip && !limit) return await model;
 
-  if (skip) model.skip(Number(skip));
-  if (limit) model.limit(Number(limit));
+  if (skip && limit) model.skip(Number(skip * limit)).limit(Number(limit));
 
   return await model;
 };
