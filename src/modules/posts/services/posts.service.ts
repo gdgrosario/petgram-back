@@ -47,7 +47,7 @@ export class PostsService {
         perDocumentLimit: 2
       });
 
-    const count = await this.postModel.find().countDocuments();
+    const countPost = await this.postModel.find().countDocuments();
 
     const response = await PaginationModel<Post>({
       paramsPagination: { skip, limit },
@@ -57,7 +57,7 @@ export class PostsService {
     if (response)
       return {
         data: response,
-        count
+        count: countPost
       };
 
     throw new NotFoundException("Post in comment not found");
