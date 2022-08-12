@@ -7,25 +7,26 @@ import { AppController } from "./controllers";
 //import { CommentsModule } from "../comments/comments.module";
 //import { UsersModule } from "../users/users.module";
 //import { AuthModule } from "../auth/auth.module";
-import { AuthUseCasesModule } from './use-cases/auth/auth-use-cases.module';
-import { AuthAdapterModule } from './adapter/crm-services/auth/auth-adapter.module';
+import { AuthUseCasesModule } from "./use-cases/auth/auth-use-cases.module";
+import { AuthAdapterModule } from "./adapter/crm-services/auth/auth-adapter.module";
 
 //import config from "../../config/config";
 
 @Module({
   imports: [
-   // ConfigModule.forRoot({
+    // ConfigModule.forRoot({
     //  envFilePath: ".env",
-     // isGlobal: true,
-      //load: [config]
+    // isGlobal: true,
+    //load: [config]
     //}),
     //DatabaseModule,
     //UsersModule,
     //CommentsModule,
     //PostsModule,
     //AuthModule
-   AuthUseCasesModule,
-   AuthAdapterModule],
+    AuthUseCasesModule,
+    AuthAdapterModule
+  ],
   controllers: [AppController],
   providers: []
 })

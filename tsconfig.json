@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "types": ["node", "multer"],
 		"paths": {
-			"@dto/*": ["./src/core/dto/*"]
+			"@dto/*": ["./src/core/dto/*"],
 			"@entity": ["./src/core/entities/index.ts"],
 			"@abstract": ["./src/core/abstracts/index.ts"]
 		}
