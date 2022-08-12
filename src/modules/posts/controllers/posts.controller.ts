@@ -20,7 +20,7 @@ import { Post as PostSchema } from "../schemas/post.schema";
 import { PostsService } from "../services/posts.service";
 import { User } from "../../users/schemas/user.schema";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ValidateImage } from "../../../utils/validateImage";
+import { ValidateImage } from "../../../utils/image";
 import { PostDto } from "../dtos/post.dtos";
 import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { ReponsePagination } from "src/interfaces/responses";

@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -18,7 +19,7 @@ import { Auth } from "../auth/decorator/auth.decorator";
 import { UpdateUserDto } from "./dtos/user.dtos";
 import { UsersService } from "./users.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ValidateImage } from "../../utils/validateImage";
+import { ValidateImage, storage } from "../../utils/image";
 import { BadRequestException } from "@nestjs/common";
 import { User } from "./schemas/user.schema";
 import { ObjectId } from "mongoose";
@@ -97,11 +98,12 @@ export class UsersController {
     return this.usersService.findUsersByNickname(nickname);
   }
 
-  @Post("/upload-avatar")
+  @Patch("/upload-avatar")
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(
     FileInterceptor("img", {
-      fileFilter: ValidateImage
+      fileFilter: ValidateImage,
+      storage
     })
   )
   @UseGuards(AuthGuard("jwt"))
@@ -112,7 +114,7 @@ export class UsersController {
     if (!file) {
       throw new BadRequestException("Error media type");
     }
-    return this.usersService.uploadAvatar(id, file);
+    return this.usersService.handleAvatar(id, file);
   }
 
   @Delete("/remove-avatar")

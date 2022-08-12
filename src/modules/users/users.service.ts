@@ -7,6 +7,7 @@ import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { User } from "./schemas/user.schema";
 import { Post } from "../posts/schemas/post.schema";
 import { Comment } from "../comments/entities/comment.entity";
+import { removeFile } from "../../utils/image";
 
 @Injectable()
 export class UsersService {
@@ -177,49 +178,60 @@ export class UsersService {
     } else throw new BadRequestException("You don't unfollow this user");
   }
 
-  async uploadAvatar(
+  async handleAvatar(
     id: string,
     file: Express.Multer.File
   ): Promise<{ message: string; url: string }> {
+    let response: { public_id: string; url: string } = {
+      public_id: "",
+      url: ""
+    };
+
     const findUser = await this.userModel.findById(id);
     if (!findUser) throw new BadRequestException("User not found");
+
     try {
       if (findUser.avatar && findUser.avatar.public_id) {
-        const { public_id, url } = await this.cloudinaryService.updateAvatar(
+        const { public_id, secure_url } = await this.cloudinaryService.updateAvatar(
           findUser.avatar.public_id,
           file,
           findUser.nickname
         );
-        await this.userModel.findByIdAndUpdate(
-          id,
-          {
-            avatar: {
-              public_id,
-              url
-            }
-          },
-          { new: true }
-        );
-        return { message: "Uploaded successfully", url };
+
+        response = {
+          public_id,
+          url: secure_url
+        };
       } else {
-        const { public_id, url } = await this.cloudinaryService.uploadAvatar(
+        const { public_id, secure_url } = await this.cloudinaryService.uploadAvatar(
           file,
           findUser.nickname
         );
-        await this.userModel.findByIdAndUpdate(
-          id,
-          {
-            avatar: {
-              public_id,
-              url
-            }
-          },
-          { new: true }
-        );
 
-        return { message: "Uploaded successfully", url };
+        response = {
+          public_id,
+          url: secure_url
+        };
       }
+      await this.userModel.findByIdAndUpdate(
+        findUser.id,
+        {
+          avatar: {
+            public_id: response.public_id,
+            url: response.url
+          }
+        },
+        { new: true }
+      );
+
+      removeFile(file.path);
+
+      return {
+        message: "ok",
+        url: response.url
+      };
     } catch (error) {
+      console.log(error);
       throw new BadRequestException("Error uploading avatar");
     }
   }
