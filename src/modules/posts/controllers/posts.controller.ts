@@ -25,7 +25,7 @@ import { PostDto } from "../dtos/post.dtos";
 import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { ReponsePagination } from "src/interfaces/responses";
 import { UserBasic } from "../interface/responses";
-
+import { storage } from "../../../utils/image";
 interface PostResponse {
   message: string;
   data?: PostSchema;
@@ -48,7 +48,8 @@ export class PostsController {
   @UseGuards(AuthGuard("jwt"))
   @UseInterceptors(
     FileInterceptor("img", {
-      fileFilter: ValidateImage
+      fileFilter: ValidateImage,
+      storage
     })
   )
   async createPost(
