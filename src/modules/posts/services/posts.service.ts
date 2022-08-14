@@ -9,6 +9,7 @@ import { PaginationParamsDto } from "../../../dtos/paginationParams.dtos";
 import { PaginationModel } from "../../../utils/pagination";
 import { ReponsePagination } from "src/interfaces/responses";
 import { UserBasic } from "../interface/responses";
+import { removeFile } from "src/utils/image";
 
 @Injectable()
 export class PostsService {
@@ -88,6 +89,8 @@ export class PostsService {
         },
         { new: true }
       );
+
+      removeFile(imageFile.path);
     } catch (error) {
       throw new BadRequestException("Error publishing post");
     }

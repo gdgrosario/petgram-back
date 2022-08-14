@@ -231,7 +231,6 @@ export class UsersService {
         url: response.url
       };
     } catch (error) {
-      console.log(error);
       throw new BadRequestException("Error uploading avatar");
     }
   }
